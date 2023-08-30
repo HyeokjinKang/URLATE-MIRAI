@@ -1,5 +1,5 @@
 module.exports = {
-  title: "URLATE-v3l Documentation",
+  title: "URLATE-v3l",
   baseUrl: "/",
   url: "https://urlate-docs.coupy.dev",
   i18n: {
@@ -27,13 +27,18 @@ module.exports = {
     ],
   ],
   themeConfig: {
-    image: "img/urlate-icon.png",
+    image: "img/icon.webp",
     navbar: {
-      title: "URLATE-v3l Documentation",
+      title: "URLATE-v3l",
       logo: {
-        alt: "URLATE-v3l Logo",
-        src: "img/urlate-icon.png",
+        alt: "Logo",
+        src: "img/icon.webp",
       },
+    },
+    colorMode: {
+      defaultMode: "light",
+      disableSwitch: false,
+      respectPrefersColorScheme: true,
     },
   },
 };
