@@ -166,6 +166,12 @@ You will see the gameplay screen after you select the track and click the track 
 5. **Progress bar**  
    The progress bar will show the progress of the track.
 
+### Pause screen
+
+You can pause the game by pressing the `Esc` key.  
+Pressing the `Esc` key again will resume the game.
+![Pause](/img/pause.webp)
+
 ### Result screen
 
 You will see the result screen after you finish the track.
