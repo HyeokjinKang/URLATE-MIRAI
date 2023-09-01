@@ -377,8 +377,8 @@ You can paste the copied objects in the range by clicking this.
 
 1. Alert will be shown when you paste the objects.
 
-## Editor shortcuts
+## Shortcuts
 
 You can see the editor shortcuts by pressing `/(?)` or hovering the `Shortcuts` tool.
 
-![Editor Shortcuts](/img/editor-shortcuts.webp)
+![Shortcuts](/img/editor-shortcuts.webp)
