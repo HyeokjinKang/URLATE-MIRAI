@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Basic Guide
+# Basic
 
 This guide is for users to play URLATE.  
 Let's learn how to play URLATE by step-by-step.
