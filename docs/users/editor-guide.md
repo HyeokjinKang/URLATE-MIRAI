@@ -12,7 +12,7 @@ If you have any questions, please feel free to open [Issues](https://github.com/
 ## Home screen
 
 When you first enter the editor, you will see the home screen.
-![Home Screen](/img/editor-home.webp)
+![Home Screen](/img/editor/editor-home.webp)
 
 1. **New**: Create a new pattern.
 2. **Load**: Open a pattern file(.json) that you have created before.
@@ -22,7 +22,7 @@ When you first enter the editor, you will see the home screen.
 If you click the `New` button, you will see the song selection screen.  
 Select the song you want to make a pattern for.
 
-![New Pattern](/img/editor-select.webp)
+![New Pattern](/img/editor/editor-select.webp)
 
 1. Select a song from the list.
 2. Click the `Select` button to select the song.
@@ -31,7 +31,7 @@ Select the song you want to make a pattern for.
 
 If you click the `Load` button, you will see the file selection dialog.
 
-![Load Pattern](/img/editor-load2.webp)
+![Load Pattern](/img/editor/editor-load2.webp)
 
 ## Editor screen
 
@@ -39,7 +39,7 @@ This is the editor screen.
 Here you can create a new pattern or load an existing pattern and modify it.  
 The editor consists of two toolbars, a timeline, a settings panel, and a preview.
 
-![Editor Screen](/img/editor-main.webp)
+![Editor Screen](/img/editor/editor-main.webp)
 
 1. **Essential tools**
    - **Move**  
@@ -58,7 +58,7 @@ The editor consists of two toolbars, a timeline, a settings panel, and a preview
    - **Save**  
      Click to save the pattern.  
      The pattern will be saved as a file(.json).
-3. **[Assist tools](#editor-tools)**
+3. **[Editor tools](#editor-tools)**
 4. **Playback controls**
    - **Play**  
      Click to play the pattern.  
@@ -92,7 +92,7 @@ The editor consists of two toolbars, a timeline, a settings panel, and a preview
 ### Pattern settings
 
 Open the settings panel by clicking the `Settings` button without selecting any object.
-![Pattern Settings](/img/editor-settings.webp)
+![Pattern Settings](/img/editor/editor-settings.webp)
 
 You can change the global pattern settings here.
 
@@ -122,15 +122,15 @@ If you select a note, the settings panel will change and appear according to the
 
 #### Click note
 
-![Note Settings](/img/editor-note.webp)
+![Note Settings](/img/editor/editor-note.webp)
 
 #### Wheel note
 
-![Wheel Note Settings](/img/editor-wheel.webp)
+![Wheel Note Settings](/img/editor/editor-wheel.webp)
 
 #### Hold note
 
-![Hold Note Settings](/img/editor-hold.webp)
+![Hold Note Settings](/img/editor/editor-hold.webp)
 
 All notes have the following settings.
 
@@ -164,11 +164,11 @@ If you select or add a bullet, the settings panel will change and appear accordi
 
 #### Pointed bulet
 
-![Pointed Bullet Settings](/img/editor-bullet.webp)
+![Pointed Bullet Settings](/img/editor/editor-bullet.webp)
 
 #### Rounded bullet
 
-![Rounded Bullet Settings](/img/editor-bullet2.webp)
+![Rounded Bullet Settings](/img/editor/editor-bullet2.webp)
 
 All bullets have the following settings.
 
@@ -199,47 +199,47 @@ All bullets have the following settings.
 You can add triggers with using the `Add` tool, by clicking the outside of the preview.  
 If you select or add a trigger, the settings panel will change and appear according to the trigger you selected.
 
-![Trigger Settings](/img/editor-trigger-add.webp)
+![Trigger Settings](/img/editor/editor-trigger-add.webp)
 
 If you add a trigger, there will be no type.  
 You should select the type of the trigger by selecting the option in the settings panel.
 
-![Trigger Default Settings](/img/editor-trigger-default.webp)
+![Trigger Default Settings](/img/editor/editor-trigger-default.webp)
 
 #### Destroy trigger
 
 This trigger will destroy the bullet when it called.  
 You should set the `TARGET NUM` value to determine which bullet will be destroyed.
-![Destroy Trigger Settings](/img/editor-trigger-destroy.webp)
+![Destroy Trigger Settings](/img/editor/editor-trigger-destroy.webp)
 
 1. This error message occurs because there is currently no `bullet_0` pointed to by `destroy trigger`.
 
 #### Destroy all trigger
 
 This trigger will destroy all bullets when it called.
-![Destroy All Trigger Settings](/img/editor-trigger-destroyall.webp)
+![Destroy All Trigger Settings](/img/editor/editor-trigger-destroyall.webp)
 
 #### BPM trigger
 
 This trigger will change the `BPM` immediately when it called.
-![BPM Trigger Settings](/img/editor-trigger-bpm.webp)
+![BPM Trigger Settings](/img/editor/editor-trigger-bpm.webp)
 
 #### Speed trigger
 
 This trigger will change the `SPEED` immediately when it called.
 The value should be between `1` and `5`.
-![Speed Trigger Settings](/img/editor-trigger-speed.webp)
+![Speed Trigger Settings](/img/editor/editor-trigger-speed.webp)
 
 #### Opacity trigger
 
 This trigger will change the opacity of the canvas immediately when it called.  
 The value should be between `0` and `1`.
-![Opacity Trigger Settings](/img/editor-trigger-opacity.webp)
+![Opacity Trigger Settings](/img/editor/editor-trigger-opacity.webp)
 
 #### Text trigger
 
 You can add text to the canvas with this trigger.  
-![Text Trigger Settings](/img/editor-trigger-text.webp)
+![Text Trigger Settings](/img/editor/editor-trigger-text.webp)
 
 1. This text is generated by the `text trigger`.
 
@@ -282,7 +282,7 @@ The editor has several tools to help you create patterns.
 
 If you enable this tool, the notes will be snapped to the grid.
 
-![Magnet](/img/editor-tool-magnet.webp)
+![Magnet](/img/editor/editor-tool-magnet.webp)
 
 1. As you can see, the notes are ignored the grid when the magnet is disabled.
 
@@ -291,13 +291,13 @@ If you enable this tool, the notes will be snapped to the grid.
 You can change the visibility of the grid by clicking this.  
 Even if the grid is invisible, the notes will be snapped to the grid if the magnet is enabled.
 
-![Grid](/img/editor-tool-grid.webp)
+![Grid](/img/editor/editor-tool-grid.webp)
 
 ### Metronome
 
 If you enable this tool, the metronome will be played when the preview is playing.
 
-![Metronome](/img/editor-tool-metronome.webp)
+![Metronome](/img/editor/editor-tool-metronome.webp)
 
 ### Circle grid
 
@@ -305,7 +305,7 @@ If you enable this tool, the circle grid will be displayed when the notes are se
 Notes will be snapped to the circle grid.  
 This tool is useful when you want to create a `jump pattern`.
 
-![Circle Grid](/img/editor-tool-circle.webp)
+![Circle Grid](/img/editor/editor-tool-circle.webp)
 
 1. As you can see, the note is snapped to the circle grid.
 
@@ -313,7 +313,7 @@ This tool is useful when you want to create a `jump pattern`.
 
 You can copy and paste multiple objects or one object by using these buttons.
 
-![Element Tools](/img/editor-tool-element-tools.webp)
+![Element Tools](/img/editor/editor-tool-element-tools.webp)
 
 ### Copy
 
@@ -325,7 +325,7 @@ You can also copy the selected objects by pressing `Ctrl(⌘) + C`.
 
 :::
 
-![Copy](/img/editor-tool-copy.webp)
+![Copy](/img/editor/editor-tool-copy.webp)
 
 1. The alert will be shown when you copy the objects.
 
@@ -339,33 +339,33 @@ You can also paste the copied objects by pressing `Ctrl(⌘) + V`.
 
 :::
 
-![Paste](/img/editor-tool-paste.webp)
+![Paste](/img/editor/editor-tool-paste.webp)
 
 ### Range copy
 
 You can copy the objects in the range by clicking this.
 
-![Range Copy](/img/editor-tool-rangecopy.webp)
+![Range Copy](/img/editor/editor-tool-rangecopy.webp)
 
 You will see the element selection dialog.
 
-![Range Copy Dialog](/img/editor-tool-rangecopy2.webp)
+![Range Copy Dialog](/img/editor/editor-tool-rangecopy2.webp)
 
 1. Select the element type you want to copy.
 1. Press `OK` to copy the objects.
 
 You can see the alert telling you to select the range.
 
-![Range Copy Range](/img/editor-tool-rangecopy3.webp)
+![Range Copy Range](/img/editor/editor-tool-rangecopy3.webp)
 
 Select the start element from the timeline or preview.
 
-![Range Copy Range2](/img/editor-tool-rangecopy4.webp)
+![Range Copy Range2](/img/editor/editor-tool-rangecopy4.webp)
 
 Alert will be shown when you select the start element.  
 Now select the end element.
 
-![Range Copy Range3](/img/editor-tool-rangecopy5.webp)
+![Range Copy Range3](/img/editor/editor-tool-rangecopy5.webp)
 
 Alert will tell you the range you selected.
 
@@ -373,7 +373,7 @@ Alert will tell you the range you selected.
 
 You can paste the copied objects in the range by clicking this.
 
-![Range Paste](/img/editor-tool-rangepaste.webp)
+![Range Paste](/img/editor/editor-tool-rangepaste.webp)
 
 1. Alert will be shown when you paste the objects.
 
@@ -381,4 +381,4 @@ You can paste the copied objects in the range by clicking this.
 
 You can see the editor shortcuts by pressing `/(?)` or hovering the `Shortcuts` tool.
 
-![Shortcuts](/img/editor-shortcuts.webp)
+![Shortcuts](/img/editor/editor-shortcuts.webp)

@@ -10,7 +10,7 @@ Let's learn how to play URLATE by step-by-step.
 ## Enter the game
 
 You can play the latest version of URLATE at [urlate.coupy.dev](https://urlate.coupy.dev/).
-![Index](/img/index.webp)
+![Index](/img/basic/index.webp)
 As shown in the picture above, you should login with your Google account to play URLATE.  
 If you don't have a Google account, you can create one at [accounts.google.com](https://accounts.google.com/).
 
@@ -22,16 +22,16 @@ If you login to URLATE for the first time, you will be asked to enter your nickn
 You **can't** change your nickname after you enter it, so please be careful when entering it.
 
 :::
-![Join](/img/join.webp)
+![Join](/img/basic/join.webp)
 After entering the nickname, you will see the welcome screen.  
 Click the `All good!` button to start the tutorial.
 
 You can skip the tutorial by clicking the `Sorry, I don't want to.` text.  
 Don't worry, you can play the tutorial again later in the `Options` menu.
-![Tutorial Info](/img/tutorial.webp)
+![Tutorial Info](/img/basic/tutorial.webp)
 If you click the `All good!` button, the tutorial will start.  
 Concentrate on the tutorial and follow the instructions to learn how to play URLATE.
-![Tutorial](/img/tutorial-ingame.webp)
+![Tutorial](/img/basic/tutorial-ingame.webp)
 
 :::tip
 
@@ -42,7 +42,7 @@ You can change the volume of the game faster by scrolling the mouse wheel while 
 ## Main screen
 
 After the tutorial, you will see the main screen.  
-![Main Screen](/img/main.webp)
+![Main Screen](/img/basic/main.webp)
 
 1. **[Profile](#profile)**  
    You can see your profile picture and nickname here.  
@@ -66,7 +66,7 @@ After the tutorial, you will see the main screen.
 ## Profile
 
 You can see your profile page by clicking the profile picture on the main screen.
-![Profile](/img/profile.webp)
+![Profile](/img/basic/profile.webp)
 
 1. **Alias**  
    You can see your nickname, picture and alias here.
@@ -93,7 +93,7 @@ Try using the keyboard shortcuts to navigate the song selection screen faster.
 **F2**: Show the ranking
 
 :::
-![Song Selection](/img/select.webp)
+![Song Selection](/img/basic/select.webp)
 
 1. **Title**  
    You can see the title and producer of the song here.
@@ -134,12 +134,12 @@ Try using the keyboard shortcuts to navigate the song selection screen faster.
 
 You can see the options screen by clicking the `Option` button on the main screen.
 
-![Options](/img/option.webp)
+![Options](/img/basic/option.webp)
 
 ## Gameplay
 
 You will see the gameplay screen after you select the track and click the track again.
-![Intro](/img/intro.webp)
+![Intro](/img/basic/intro.webp)
 
 1. **Pattern artist**  
    You can see the pattern artist of the selected track here.
@@ -150,12 +150,12 @@ You will see the gameplay screen after you select the track and click the track 
 
 ### Gameplay screen
 
-![Gameplay](/img/ingame.webp)
+![Gameplay](/img/basic/ingame.webp)
 
 1. **Key overlay**  
    The key overlay will represent the key you pressed.
    The color of the key overlay shows the judgement.  
-   ![Judgement](/img/key.webp)  
+   ![Judgement](/img/basic/key.webp)  
    Colors represent `Perfect`, `Great`, `Good`, `Bad`, `Miss`, `Bullet`, `Nothing` from the left.
 2. **Score**  
    Your score will be shown here.
@@ -170,7 +170,7 @@ You will see the gameplay screen after you select the track and click the track 
 
 You can pause the game by pressing the `Esc` key.  
 Pressing the `Esc` key again will resume the game.
-![Pause](/img/pause.webp)
+![Pause](/img/basic/pause.webp)
 
 ### Result screen
 
@@ -181,7 +181,7 @@ About more detailed information about the result calculation, please refer to th
 
 :::
 
-![Result](/img/result.webp)
+![Result](/img/basic/result.webp)
 
 1. **Title**  
    Title and producer of the selected track will be shown here.

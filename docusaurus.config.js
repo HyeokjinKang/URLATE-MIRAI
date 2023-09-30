@@ -1,7 +1,7 @@
 module.exports = {
-  title: "URLATE-v3l",
+  title: "URLATE MIRAI",
   baseUrl: "/",
-  url: "https://urlate-docs.coupy.dev",
+  url: "https://mirai.uralte.coupy.dev",
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -21,19 +21,52 @@ module.exports = {
       "classic",
       {
         docs: {
-          routeBasePath: "/",
+          routeBasePath: "/docs/",
         },
+        blog: {
+          routeBasePath: "/",
+          blogTitle: "URLATE Blog",
+          blogDescription: "URLATE announcements and updates",
+        },
+        theme: {
+          customCss: [
+            require.resolve("./static/css/custom.css"),
+            // relative paths are relative to site dir
+          ],
+        },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      "@docusaurus/plugin-content-blog",
+      {
+        id: "announcements",
+        routeBasePath: "announcements",
+        path: "./announcements",
+        blogSidebarCount: 0,
       },
     ],
   ],
   themeConfig: {
     image: "img/icon.webp",
     navbar: {
-      title: "URLATE-v3l",
+      title: "URLATE MIRAI",
       logo: {
         alt: "Logo",
         src: "img/icon.webp",
       },
+      items: [
+        { to: "docs", label: "Docs", position: "left" },
+        { to: "announcements", label: "Announcements", position: "left" },
+        {
+          href: "https://github.com/HyeokjinKang/URLATE",
+          position: "right",
+          className: "header-github-link",
+          "aria-label": "GitHub repository",
+          target: "_blank",
+        },
+      ],
     },
     colorMode: {
       defaultMode: "light",
