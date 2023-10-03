@@ -4,7 +4,7 @@ module.exports = {
   url: "https://mirai.uralte.coupy.dev",
   i18n: {
     defaultLocale: "en",
-    locales: ["en"],
+    locales: ["en", "ko"],
     path: "i18n",
     localeConfigs: {
       en: {
@@ -13,6 +13,13 @@ module.exports = {
         htmlLang: "en-US",
         calendar: "gregory",
         path: "en",
+      },
+      ko: {
+        label: "한국어",
+        direction: "ltr",
+        htmlLang: "ko-KR",
+        calendar: "gregory",
+        path: "ko",
       },
     },
   },
@@ -65,6 +72,10 @@ module.exports = {
           className: "header-github-link",
           "aria-label": "GitHub repository",
           target: "_blank",
+        },
+        {
+          type: "localeDropdown",
+          position: "right",
         },
       ],
     },
