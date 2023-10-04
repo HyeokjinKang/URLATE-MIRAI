@@ -67,15 +67,15 @@ module.exports = {
         { to: "docs", label: "Docs", position: "left" },
         { to: "announcements", label: "Announcements", position: "left" },
         {
+          type: "localeDropdown",
+          position: "right",
+        },
+        {
           href: "https://github.com/HyeokjinKang/URLATE",
           position: "right",
           className: "header-github-link",
           "aria-label": "GitHub repository",
           target: "_blank",
-        },
-        {
-          type: "localeDropdown",
-          position: "right",
         },
       ],
     },
