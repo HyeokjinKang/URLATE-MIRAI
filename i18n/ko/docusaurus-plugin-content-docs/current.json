@@ -4,11 +4,11 @@
     "description": "The label for version current"
   },
   "sidebar.defaultSidebar.category.Users": {
-    "message": "Users",
+    "message": "사용자",
     "description": "The label for category Users in sidebar defaultSidebar"
   },
   "sidebar.defaultSidebar.category.Developers": {
-    "message": "Developers",
+    "message": "개발자",
     "description": "The label for category Developers in sidebar defaultSidebar"
   }
 }

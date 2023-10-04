@@ -1,14 +1,14 @@
 {
   "title": {
-    "message": "Blog",
+    "message": "URLATE 공지사항",
     "description": "The title for the blog used in SEO"
   },
   "description": {
-    "message": "Blog",
+    "message": "URLATE의 최근 공지사항을 확인하세요.",
     "description": "The description for the blog used in SEO"
   },
   "sidebar.title": {
-    "message": "Recent posts",
+    "message": "최근 게시물",
     "description": "The label for the left sidebar"
   }
 }
