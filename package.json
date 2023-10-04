@@ -1,6 +1,6 @@
 {
-  "name": "urlate-v-3-l-docs",
-  "version": "0.0.0",
+  "name": "urlate-miral",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
