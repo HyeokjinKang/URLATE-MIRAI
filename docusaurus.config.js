@@ -1,7 +1,7 @@
 module.exports = {
   title: "URLATE MIRAI",
   baseUrl: "/",
-  url: "https://mirai.uralte.coupy.dev",
+  url: "https://mirai.urlate.coupy.dev",
   i18n: {
     defaultLocale: "en",
     locales: ["en", "ko"],
