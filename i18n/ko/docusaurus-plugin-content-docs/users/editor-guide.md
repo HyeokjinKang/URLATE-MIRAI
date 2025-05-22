@@ -1,350 +1,238 @@
 ---
-sidebar_position: 2
+## sidebar_position: 2
 ---
 
 # Editor
 
-URLATE has a built-in editor that allows you to create patterns.  
-This guide will help you learn how to use the editor.  
-It's a bit complicated, but if you follow the instructions carefully, you'll be able to use the editor nicely.  
-If you have any questions, please feel free to open [Issues](https://github.com/HyeokjinKang/URLATE-v3l-frontend/issues).
+URLATE includes a built-in editor that lets you create and modify patterns.  
+This guide will walk you through how to use it.  
+It may seem a bit complicated at first, but if you follow the instructions step by step, you'll get the hang of it.  
+If you have any questions, feel free to open an [issue](https://github.com/HyeokjinKang/URLATE-v3l-frontend/issues).
 
-## Home screen
+## Home Screen
 
-When you first enter the editor, you will see the home screen.
+When you first open the editor, you'll see the home screen.
 ![Home Screen](/img/editor/editor-home.webp)
 
 1. **New**: Create a new pattern.
-2. **Load**: Open a pattern file(.json) that you have created before.
+2. **Load**: Open an existing pattern file (.json).
 
-### Making a new pattern
+### Creating a New Pattern
 
-If you click the `New` button, you will see the song selection screen.  
-Select the song you want to make a pattern for.
+Click the `New` button to open the song selection screen.
+Choose the song you want to use for your pattern.
 
 ![New Pattern](/img/editor/editor-select.webp)
 
 1. Select a song from the list.
-2. Click the `Select` button to select the song.
+2. Click the `Select` button.
 
-### Loading a existing pattern
+### Loading an Existing Pattern
 
-If you click the `Load` button, you will see the file selection dialog.
-
+Click the `Load` button to open the file selection dialog.
 ![Load Pattern](/img/editor/editor-load2.webp)
 
-## Editor screen
+## Editor Screen
 
-This is the editor screen.  
-Here you can create a new pattern or load an existing pattern and modify it.  
-The editor consists of two toolbars, a timeline, a settings panel, and a preview.
+This is the main editor screen where you can create or modify patterns.  
+It includes two toolbars, a timeline, a settings panel, and a preview area.
 
 ![Editor Screen](/img/editor/editor-main.webp)
 
-1. **Essential tools**
-   - **Move**  
-     Click and drag to move the selected object.  
-     You can also change the timing of the object by dragging the object on the timeline.
-   - **Edit**  
-     Click to edit the selected object.  
-     The settings panel will change and appear according to the object you selected.
-   - **Add**  
-     Click to add a new object.  
-     Added object will be selected automatically.
+1. **Essential Tools**
+
+   - **Move**: Click and drag to move an object. You can also adjust its timing in the timeline.
+   - **Edit**: Click to edit the selected object. The settings panel will update accordingly.
+   - **Add**: Click to add a new object. The new object will be automatically selected.
+
 2. **Test / Save**
-   - **Test**  
-     Clicking this button will redirect you to the test page.  
-     The pattern you are currently editing will be saved in the browser's local storage, but it's recommended to save it as a file.
-   - **Save**  
-     Click to save the pattern.  
-     The pattern will be saved as a file(.json).
-3. **[Editor tools](#editor-tools)**
-4. **Playback controls**
-   - **Play**  
-     Click to play the pattern.  
-     The preview will start playing.
-   - **Stop**  
-     Click to stop the preview.
-   - **Rate**  
-     You can change the playback speed of the preview.  
-     The default value is `100%`.
-5. **Time indicator**  
-   You can see the current time of the preview here.  
-   Clicking this will copy the current time to the clipboard.
-6. **Elements viewer**  
-   If you stack multiple objects at the similar time, the line will be divided into multiple lines and you can see the objects stacked at the same time.
-7. **Timeline**  
-   You can see the objects you added here.  
-   You can also change the timing of the object by dragging the object on the timeline.
-8. **Beat selector**  
-   You can determine how to divide the beats by clicking this.
-9. **Key indicator**  
-   This text shows the key you are currently pressing.  
-   (`Shift`, `Ctrl`, `⌘`)
-10. **Zoom**  
-    You can zoom in or out the timeline by clicking this.
-11. **Settings panel**  
-    Clicking this will toggle the settings panel.
-12. **[Element tools](#element-tools)**
-13. **Move**  
-    By clicking this, you can move the timeline by entering the time you want to move.
 
-### Pattern settings
+   - **Test**: Redirects to the test page. The current pattern is saved in local storage, but it's recommended to export it as a file.
+   - **Save**: Exports the pattern as a `.json` file.
 
-Open the settings panel by clicking the `Settings` button without selecting any object.
+3. **[Editor Tools](#editor-tools)**
+4. **Playback Controls**
+
+   - **Play**: Starts preview playback.
+   - **Stop**: Stops playback.
+   - **Rate**: Adjusts playback speed (default: `100%`).
+
+5. **Time Indicator**: Displays the current preview time. Click to copy it to clipboard.
+6. **Elements Viewer**: Shows stacked objects if multiple exist at the same time.
+7. **Timeline**: Displays added objects. Drag to change their timing.
+8. **Beat Selector**: Click to choose how beats are divided.
+9. **Key Indicator**: Displays currently pressed keys (`Shift`, `Ctrl`, `⌘`).
+10. **Zoom**: Zooms in or out of the timeline.
+11. **Settings Panel**: Toggles the settings panel.
+12. **[Element Tools](#element-tools)**
+13. **Move (Time)**: Move the timeline by specifying a time value.
+
+### Pattern Settings
+
+Click the `Settings` button with no object selected to open global pattern settings.
 ![Pattern Settings](/img/editor/editor-settings.webp)
 
-You can change the global pattern settings here.
+- **INFORMATION**: Basic pattern metadata. If it's a collaborative work, update the `AUTHOR` field.
+- **PROPERTY**
 
-- **INFORMATION**  
-  Information you entered here will be saved in the pattern file.  
-  If your pattern is the result from many people's collaboration, it's recommended to change `AUTHOR` field.
-- **PROPERTY**  
-  You can set the default value of the property here.
-  - **TEMPO**  
-    _This is deprecated field. It will be removed in the future._
-  - **BPM**  
-    This value will set the initial value of the `BPM`.
-  - **SPEED**  
-    `SPEED` determines how fast the objects move.  
-    For example, if you increase the `SPEED` value, the notes will appear for a shorter time.  
-    The value should be between `1` and `5`.
-  - **SYNC**  
-    If the song is off-beat, you can adjust the timing by changing this value.  
-    This is the number of milliseconds to adjust the timing.
-- **BACKGROUND**  
-  URLATE supports using [lottie files](https://lottiefiles.com) as a background.
+  - **BPM**: Sets the initial beats per minute.
+  - **SPEED**: Controls how fast objects move (range: `1`–`5`).
+  - **SYNC**: Adjusts offset in milliseconds for audio syncing.
 
-### Note settings
+### Note Settings
 
-You can add notes with using the `Add` tool, by clicking the preview.  
-If you select a note, the settings panel will change and appear according to the note you selected.
+Add notes using the `Add` tool and clicking the preview. Selecting a note updates the settings panel.
 
-#### Click note
+#### Click Note
 
 ![Note Settings](/img/editor/editor-note.webp)
 
-#### Wheel note
+#### Wheel Note
 
 ![Wheel Note Settings](/img/editor/editor-wheel.webp)
 
-#### Hold note
+#### Hold Note
 
 ![Hold Note Settings](/img/editor/editor-hold.webp)
 
-All notes have the following settings.
+All notes share these settings:
 
 - **POSITION**
-  - **X**  
-    The X position of the note.  
-    The value should be between `-100` and `100`.
-  - **Y**  
-    The Y position of the note.  
-    The value should be between `-100` and `100`.
+
+  - **X / Y**: Note position (range: `-100` to `100`).
+
 - **PROPERTY**
-  - **TIMING**  
-    The timing of the note.  
-    The value means the millisecond from the start of the song.
-  - **DIRECTION**(Wheel note)  
-    The direction of the wheel note.  
-    The value should be `-1` or `1`.
-  - **TIME**(Hold note)  
-    The time of the hold note.  
-    The value means the millisecond from the start of the note.
+
+  - **TIMING**: Beat count from the start of the song.
+  - **DIRECTION** (Wheel note): Either `-1` or `1`.
+  - **TIME** (Hold note): Beat duration from note start.
+
 - **ACTION**
-  - **CHANGE**  
-    You can change the type of the note by clicking this.
-  - **DELETE**  
-    You can delete the note by clicking this.
 
-### Bullet settings
+  - **CHANGE**: Change note type.
+  - **DELETE**: Remove the note.
 
-You can add bullets with using the `Add` tool, by clicking the side of the preview.  
-If you select or add a bullet, the settings panel will change and appear according to the bullet you selected.
+### Bullet Settings
 
-#### Pointed bulet
+Add bullets using the `Add` tool by clicking the side of the preview. Select or add a bullet to see its settings.
+
+#### Pointed Bullet
 
 ![Pointed Bullet Settings](/img/editor/editor-bullet.webp)
 
-#### Rounded bullet
-
-![Rounded Bullet Settings](/img/editor/editor-bullet2.webp)
-
-All bullets have the following settings.
-
 - **POSITION**
-  - **SIDE**  
-    This value determines which side the bullet will appear.
-  - **LOCATION**  
-    The location of the bullet.  
-    The value should be between `0` and `100`.
-  - **ANGLE**(Pointed bullet)  
-    The degree angle of the bullet.  
-    The value should be between `-180` and `180`.  
-    The value can be more than `180` or less than `-180`, but it could be result in unexpected behavior.
+
+  - **SIDE**: Which side the bullet appears from.
+  - **LOCATION**: Position along that side (0–100).
+
 - **PROPERTY**
-  - **TIMING**  
-    This value means the millisecond from the start of the song.
-  - **SPEED**  
-    This value determines how fast the bullet will move.  
-    The value should be between `1` and `5`.
+
+  - **TIMING**: Beat count from the start of the song.
+  - **SPEED**: Bullet speed.
+
 - **ACTION**
-  - **CHANGE**  
-    You can change the type of the bullet by clicking this.
-  - **DELETE**  
-    You can delete the bullet by clicking this.
 
-### Trigger settings
+  - **CHANGE**: Change bullet type.
+  - **DELETE**: Delete the bullet.
 
-You can add triggers with using the `Add` tool, by clicking the outside of the preview.  
-If you select or add a trigger, the settings panel will change and appear according to the trigger you selected.
+### Trigger Settings
+
+Add triggers by clicking the outer area of the preview using the `Add` tool. Each trigger type can be selected after creation.
 
 ![Trigger Settings](/img/editor/editor-trigger-add.webp)
 
-If you add a trigger, there will be no type.  
-You should select the type of the trigger by selecting the option in the settings panel.
+#### Destroy Trigger
 
-![Trigger Default Settings](/img/editor/editor-trigger-default.webp)
-
-#### Destroy trigger
-
-This trigger will destroy the bullet when it called.  
+Destroys a specific bullet.  
 You should set the `TARGET NUM` value to determine which bullet will be destroyed.
 ![Destroy Trigger Settings](/img/editor/editor-trigger-destroy.webp)
 
 1. This error message occurs because there is currently no `bullet_0` pointed to by `destroy trigger`.
 
-#### Destroy all trigger
+#### Destroy All Trigger
 
-This trigger will destroy all bullets when it called.
+Destroys all bullets.
 ![Destroy All Trigger Settings](/img/editor/editor-trigger-destroyall.webp)
 
-#### BPM trigger
+#### BPM Trigger
 
-This trigger will change the `BPM` immediately when it called.
+Immediately changes the BPM.
 ![BPM Trigger Settings](/img/editor/editor-trigger-bpm.webp)
 
-#### Speed trigger
+#### Speed Trigger
 
-This trigger will change the `SPEED` immediately when it called.
-The value should be between `1` and `5`.
+Immediately changes the speed.
 ![Speed Trigger Settings](/img/editor/editor-trigger-speed.webp)
 
-#### Opacity trigger
+#### Opacity Trigger
 
-This trigger will change the opacity of the canvas immediately when it called.  
-The value should be between `0` and `1`.
+Sets canvas opacity (range: `0` to `1`).
 ![Opacity Trigger Settings](/img/editor/editor-trigger-opacity.webp)
 
-#### Text trigger
+#### Text Trigger
 
-You can add text to the canvas with this trigger.  
+Displays text on the canvas.
 ![Text Trigger Settings](/img/editor/editor-trigger-text.webp)
 
 1. This text is generated by the `text trigger`.
 
 - **PROPERTY**
-  - **TIMING**  
-    This value means the millisecond from the start of the song.
-  - **V-ALIGN**  
-    This value determines the vertical alignment of the text.  
-    The value is equal to the `CanvasRenderingContext2D.textBaseline` property.  
-    You can see the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline) for more information.
-  - **ALIGN**  
-    This value determines the horizontal alignment of the text.  
-    The value is equal to the `CanvasRenderingContext2D.textAlign` property.  
-    You can see the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign) for more information.
-  - **WEIGHT**  
-    This value determines the font weight of the text.  
-    It should be between `10` and `900`.
-  - **SIZE**
-    This value determines the font size of the text.  
-    Its unit can be any CSS unit, but it is recommended to use vh.
-  - **TIME**  
-    This value determines how long the text will be displayed.  
-    The value means the millisecond from the start of the text.
-- **POSITION**
-  - **X**  
-    The X position of the text.  
-    The value should be between `-100` and `100`.
-  - **Y**  
-    The Y position of the text.  
-    The value should be between `-100` and `100`.
-- **VALUE**
-  - **TEXT**  
-    The text to be displayed.
 
-## Editor tools
+  - **TIMING**: Beat count from the start of the song.
+  - **V-ALIGN / ALIGN**: Text alignment (see [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline)).
+  - **WEIGHT / SIZE**: Font weight (10–900) and size (CSS unit, `vh` recommended).
+  - **TIME**: Duration to display, in beats.
 
-The editor has several tools to help you create patterns.
+- **POSITION (X / Y)**: Text position (`-100` to `100`).
+- **VALUE (TEXT)**: The actual text to display.
+
+## Editor Tools
 
 ### Magnet
 
-If you enable this tool, the notes will be snapped to the grid.
-
+Snaps notes to the grid.
 ![Magnet](/img/editor/editor-tool-magnet.webp)
 
 1. As you can see, the notes are ignored the grid when the magnet is disabled.
 
 ### Grid
 
-You can change the visibility of the grid by clicking this.  
+Toggles grid visibility.  
 Even if the grid is invisible, the notes will be snapped to the grid if the magnet is enabled.
-
 ![Grid](/img/editor/editor-tool-grid.webp)
 
 ### Metronome
 
-If you enable this tool, the metronome will be played when the preview is playing.
-
+Plays metronome sound during preview playback.
 ![Metronome](/img/editor/editor-tool-metronome.webp)
 
-### Circle grid
+### Circle Grid
 
-If you enable this tool, the circle grid will be displayed when the notes are selected.  
-Notes will be snapped to the circle grid.  
-This tool is useful when you want to create a `jump pattern`.
-
+Displays a circular grid when notes are selected, useful for jump patterns.
 ![Circle Grid](/img/editor/editor-tool-circle.webp)
 
 1. As you can see, the note is snapped to the circle grid.
 
-## Element tools
+## Element Tools
 
-You can copy and paste multiple objects or one object by using these buttons.
-
+Copy/paste one or multiple objects using these buttons.
 ![Element Tools](/img/editor/editor-tool-element-tools.webp)
 
 ### Copy
 
-You can copy the selected objects by clicking this.
-
-:::tip
-
-You can also copy the selected objects by pressing `Ctrl(⌘) + C`.
-
-:::
-
+Click or press `Ctrl(⌘) + C` to copy.
 ![Copy](/img/editor/editor-tool-copy.webp)
 
 1. The alert will be shown when you copy the objects.
 
 ### Paste
 
-You can paste the copied objects by clicking this.
-
-:::tip
-
-You can also paste the copied objects by pressing `Ctrl(⌘) + V`.
-
-:::
-
+Click or press `Ctrl(⌘) + V` to paste.
 ![Paste](/img/editor/editor-tool-paste.webp)
 
-### Range copy
+### Range Copy
 
-You can copy the objects in the range by clicking this.
-
+Copy objects within a selected range.
 ![Range Copy](/img/editor/editor-tool-rangecopy.webp)
 
 You will see the element selection dialog.
@@ -371,14 +259,12 @@ Alert will tell you the range you selected.
 
 ### Range Paste
 
-You can paste the copied objects in the range by clicking this.
-
+Paste objects copied via range.
 ![Range Paste](/img/editor/editor-tool-rangepaste.webp)
 
 1. Alert will be shown when you paste the objects.
 
 ## Shortcuts
 
-You can see the editor shortcuts by pressing `/(?)` or hovering the `Shortcuts` tool.
-
+Press `/(?)` or hover over the `Shortcuts` tool to view all shortcuts.
 ![Shortcuts](/img/editor/editor-shortcuts.webp)
