@@ -6,6 +6,12 @@
   --ifm-heading-font-family: var(--ifm-font-family-base);
 }
 
+html {
+  /* Render text with grayscale antialiasing instead of subpixel. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .header-github-link:hover {
   opacity: 0.6;
 }
