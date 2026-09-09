@@ -16,6 +16,22 @@ const config = {
       onBrokenMarkdownLinks: "warn",
     },
   },
+  headTags: [
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://cdn.jsdelivr.net",
+        crossorigin: "anonymous",
+      },
+    },
+  ],
+  stylesheets: [
+    {
+      href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css",
+      type: "text/css",
+    },
+  ],
   i18n: {
     defaultLocale: "en",
     locales: ["en", "ko"],

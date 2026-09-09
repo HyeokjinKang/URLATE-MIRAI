@@ -1,3 +1,11 @@
+:root {
+  --ifm-font-family-base:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --ifm-heading-font-family: var(--ifm-font-family-base);
+}
+
 .header-github-link:hover {
   opacity: 0.6;
 }
