@@ -1,8 +1,12 @@
 {
-  // This file is not used in compilation. It is here just for a nice editor experience.
+  // This file is not used in compilation. It is here just for a nice editor
+  // experience, and to type-check the JS config files via `npm run typecheck`.
   "extends": "@tsconfig/docusaurus/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "module": "Node16"
-  }
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true
+  },
+  "include": ["docusaurus.config.js", "sidebars.js", "src/**/*"]
 }

@@ -1,7 +1,21 @@
-module.exports = {
+// @ts-check
+
+/** @type {import('@docusaurus/types').Config} */
+const config = {
   title: "URLATE MIRAI",
-  baseUrl: "/",
+  tagline: "URLATE announcements, updates and documentation",
   url: "https://mirai.urlate.coupy.dev",
+  baseUrl: "/",
+  favicon: "img/icon.webp",
+  organizationName: "HyeokjinKang",
+  projectName: "URLATE-v3l-docs",
+  onBrokenLinks: "throw",
+  onBrokenAnchors: "warn",
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en", "ko"],
@@ -26,63 +40,76 @@ module.exports = {
   presets: [
     [
       "classic",
-      {
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
         docs: {
-          routeBasePath: "/docs/",
+          path: "docs",
+          routeBasePath: "docs",
+          sidebarPath: "./sidebars.js",
         },
         blog: {
+          path: "blog",
           routeBasePath: "/",
           blogTitle: "URLATE Blog",
           blogDescription: "URLATE announcements and updates",
+          onInlineAuthors: "ignore",
+          onUntruncatedBlogPosts: "ignore",
         },
         theme: {
           customCss: [
-            require.resolve("./static/css/custom.css"),
             // relative paths are relative to site dir
+            require.resolve("./src/css/custom.css"),
           ],
         },
-      },
+      }),
     ],
   ],
   plugins: [
     [
       "@docusaurus/plugin-content-blog",
-      {
+      /** @type {import('@docusaurus/plugin-content-blog').Options} */
+      ({
         id: "announcements",
         routeBasePath: "announcements",
         path: "./announcements",
         blogSidebarCount: 0,
-      },
+        onInlineAuthors: "ignore",
+        onUntruncatedBlogPosts: "ignore",
+      }),
     ],
   ],
-  themeConfig: {
-    image: "img/icon.webp",
-    navbar: {
-      title: "URLATE MIRAI",
-      logo: {
-        alt: "Logo",
-        src: "img/icon.webp",
+  themeConfig:
+    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+    ({
+      image: "img/icon.webp",
+      navbar: {
+        title: "URLATE MIRAI",
+        logo: {
+          alt: "Logo",
+          src: "img/icon.webp",
+        },
+        items: [
+          { to: "/docs", label: "Docs", position: "left" },
+          { to: "/announcements", label: "Announcements", position: "left" },
+          {
+            type: "localeDropdown",
+            position: "right",
+          },
+          {
+            href: "https://github.com/HyeokjinKang/URLATE",
+            position: "right",
+            className: "header-github-link",
+            "aria-label": "GitHub repository",
+            target: "_blank",
+          },
+        ],
       },
-      items: [
-        { to: "docs", label: "Docs", position: "left" },
-        { to: "announcements", label: "Announcements", position: "left" },
-        {
-          type: "localeDropdown",
-          position: "right",
-        },
-        {
-          href: "https://github.com/HyeokjinKang/URLATE",
-          position: "right",
-          className: "header-github-link",
-          "aria-label": "GitHub repository",
-          target: "_blank",
-        },
-      ],
-    },
-    colorMode: {
-      defaultMode: "light",
-      disableSwitch: false,
-      respectPrefersColorScheme: true,
-    },
-  },
+      colorMode: {
+        defaultMode: "light",
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
+      },
+    }),
 };
+
+module.exports = config;
