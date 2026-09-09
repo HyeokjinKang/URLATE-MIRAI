@@ -8,7 +8,7 @@ const config = {
   baseUrl: "/",
   favicon: "img/icon.webp",
   organizationName: "HyeokjinKang",
-  projectName: "URLATE-v3l-docs",
+  projectName: "URLATE-MIRAI",
   onBrokenLinks: "throw",
   onBrokenAnchors: "warn",
   markdown: {
