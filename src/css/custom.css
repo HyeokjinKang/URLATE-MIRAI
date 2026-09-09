@@ -12,6 +12,19 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* -webkit-font-smoothing has no effect on Windows, where Chromium keeps
+   subpixel (LCD) antialiasing for text that is not painted into its own
+   compositing layer. Text in already promoted elements such as the fixed
+   navbar renders grayscale, the rest does not, so the page ends up mixing
+   both. Promoting the remaining layout regions makes it grayscale
+   throughout. These are region wrappers, not individual elements, so this
+   costs a handful of layers rather than one per text node. */
+.theme-layout-navbar,
+.theme-layout-main,
+.theme-doc-sidebar-container {
+  will-change: transform;
+}
+
 .header-github-link:hover {
   opacity: 0.6;
 }
