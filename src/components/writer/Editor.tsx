@@ -46,7 +46,7 @@ function prefixLines(prefix: string): Edit {
   };
 }
 
-function block(text: string, cursor = text.length): Edit {
+function block(text: string, cursor = text.length + 2): Edit {
   return (value, start, end) => {
     const before = value.slice(0, start);
     const lead =
@@ -64,6 +64,108 @@ function block(text: string, cursor = text.length): Edit {
   };
 }
 
+function withImports(imports: string[], edit: Edit): Edit {
+  return (value, start, end) => {
+    const result = edit(value, start, end);
+    const missing = imports.filter((line) => !result.value.includes(line));
+    if (missing.length === 0) return result;
+    const leading = result.value.match(/^(?:import\s[^\n]*\n)*/)![0];
+    const insert = missing.join("\n") + "\n" + (leading ? "" : "\n");
+    return {
+      value:
+        result.value.slice(0, leading.length) +
+        insert +
+        result.value.slice(leading.length),
+      start: result.start + insert.length,
+      end: result.end + insert.length,
+    };
+  };
+}
+
+const footnote: Edit = (value, start, end) => {
+  const used = [...value.matchAll(/\[\^(\d+)\]/g)].map((m) => Number(m[1]));
+  const n = Math.max(0, ...used) + 1;
+  const ref = `[^${n}]`;
+  const body = value.slice(0, start) + ref + value.slice(end);
+  const definition = `${ref}: `;
+  const next = `${body.trimEnd()}\n\n${definition}각주 내용\n`;
+  const cursor = body.trimEnd().length + 2 + definition.length;
+  return { value: next, start: cursor, end: cursor + 5 };
+};
+
+const SNIPPETS: { label: string; edit: Edit }[] = [
+  ...(
+    [
+      ["note", "참고"],
+      ["tip", "팁"],
+      ["info", "정보"],
+      ["warning", "주의"],
+      ["danger", "위험"],
+    ] as const
+  ).map(([type, label]) => ({
+    label: `알림 상자: ${label}`,
+    edit: block(`:::${type}[${label}]\n\n:::`, type.length + label.length + 6),
+  })),
+  {
+    label: "탭",
+    edit: withImports(
+      [
+        'import Tabs from "@theme/Tabs";',
+        'import TabItem from "@theme/TabItem";',
+      ],
+      block(
+        '<Tabs>\n  <TabItem value="first" label="첫 번째" default>\n    첫 번째 내용\n  </TabItem>\n  <TabItem value="second" label="두 번째">\n    두 번째 내용\n  </TabItem>\n</Tabs>',
+      ),
+    ),
+  },
+  {
+    label: "접기 (더 보기)",
+    edit: block(
+      "<details>\n  <summary>더 보기</summary>\n\n  접힌 내용\n\n</details>",
+    ),
+  },
+  {
+    label: "코드 블록",
+    edit: block(
+      '```js title="example.js" showLineNumbers\nconst a = 1;\n// highlight-next-line\nconsole.log(a);\n```',
+    ),
+  },
+  {
+    label: "표",
+    edit: block("| 항목 | 내용 |\n| --- | --- |\n| A | 1 |\n| B | 2 |"),
+  },
+  { label: "체크리스트", edit: block("- [x] 끝난 일\n- [ ] 할 일") },
+  { label: "각주", edit: footnote },
+  { label: "수식 (줄 안)", edit: wrap("$", "$", "x^2") },
+  { label: "수식 (블록)", edit: block("$$\nE = mc^2\n$$", 3) },
+  {
+    label: "다이어그램 (Mermaid)",
+    edit: block("```mermaid\ngraph LR\n  A[시작] --> B[끝]\n```"),
+  },
+  {
+    label: "본문 속 목차",
+    edit: withImports(
+      ['import TOCInline from "@theme/TOCInline";'],
+      block("<TOCInline toc={toc} />"),
+    ),
+  },
+  {
+    label: "라이트/다크 이미지",
+    edit: withImports(
+      ['import ThemedImage from "@theme/ThemedImage";'],
+      block(
+        '<ThemedImage\n  alt=""\n  sources={{\n    light: "/img/light.webp",\n    dark: "/img/dark.webp",\n  }}\n/>',
+      ),
+    ),
+  },
+  {
+    label: "YouTube 동영상",
+    edit: block(
+      '<iframe\n  style={{ width: "100%", aspectRatio: "16 / 9", border: 0 }}\n  src="https://www.youtube.com/embed/VIDEO_ID"\n  allowFullScreen\n/>',
+    ),
+  },
+];
+
 const TOOLS: { label: string; title: string; edit: Edit }[] = [
   { label: "B", title: "굵게 (Ctrl+B)", edit: wrap("**", "**", "굵은 글씨") },
   { label: "I", title: "기울임 (Ctrl+I)", edit: wrap("*", "*", "기울임") },
@@ -79,7 +181,6 @@ const TOOLS: { label: string; title: string; edit: Edit }[] = [
   },
   { label: "</>", title: "코드", edit: wrap("`", "`", "code") },
   { label: "―", title: "구분선", edit: block("---") },
-  { label: "알림", title: "알림 상자", edit: block(":::note\n\n:::", 9) },
   {
     label: "✂ 요약",
     title: "목록에는 이 표시 위쪽까지만 보입니다",
@@ -203,6 +304,24 @@ export default function Editor({
             {tool.label}
           </button>
         ))}
+        <select
+          className={styles.insert}
+          value=""
+          title="Docusaurus 기능 넣기"
+          onChange={(e) => {
+            const snippet = SNIPPETS[Number(e.target.value)];
+            if (snippet) apply(snippet.edit);
+          }}
+        >
+          <option value="" disabled>
+            ＋ 넣기
+          </option>
+          {SNIPPETS.map((snippet, i) => (
+            <option key={snippet.label} value={i}>
+              {snippet.label}
+            </option>
+          ))}
+        </select>
         <button
           type="button"
           title="이미지 올리기 (붙여넣기·끌어다 놓기도 됩니다)"
@@ -236,6 +355,14 @@ export default function Editor({
       />
       <div className={styles.hint}>
         Shift+Enter 줄바꿈 · Enter 두 번 문단 나누기 · Ctrl+B 굵게 · Ctrl+K 링크
+        ·{" "}
+        <a
+          href="https://docusaurus.io/docs/markdown-features"
+          target="_blank"
+          rel="noreferrer"
+        >
+          문법 안내
+        </a>
       </div>
     </div>
   );

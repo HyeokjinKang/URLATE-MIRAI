@@ -30,6 +30,8 @@ Blog posts and announcements can be written in the browser at `/write` (for exam
 
 On first use it asks for a fine-grained personal access token limited to this repository with **Contents** and **Pull requests** set to read and write. The token is kept only in that browser's local storage.
 
+The preview and the pre-publish check run the same Markdown pipeline as the site build (admonitions, heading IDs, emoji, math, Mermaid, code block options, `<details>`, inline TOC), and theme components such as `@theme/Tabs` or `@theme/CodeBlock` can be imported as usual. The **＋ 넣기** menu inserts these blocks.
+
 ### Build
 
 ```
