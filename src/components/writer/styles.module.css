@@ -1,0 +1,486 @@
+/* ---- Layout ------------------------------------------------------------ */
+
+.writer {
+  word-break: keep-all;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.headerLeft h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.headerRight {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.user img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.muted {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.85rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ---- Fields ------------------------------------------------------------ */
+
+.input {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.input:focus {
+  outline: 2px solid var(--ifm-color-primary-lighter);
+  outline-offset: -1px;
+}
+
+.input:disabled {
+  opacity: 0.6;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  align-items: end;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-card-border-radius);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.meta label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.meta label.check,
+.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.titleFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.titleInput {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* ---- Tabs -------------------------------------------------------------- */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.tab {
+  padding: 0.5rem 0.25rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--ifm-color-emphasis-700);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabActive {
+  border-bottom-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.tabOff {
+  opacity: 0.6;
+}
+
+.viewSwitch {
+  display: flex;
+  margin-left: auto;
+  margin-bottom: 0.4rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+}
+
+.viewSwitch button {
+  padding: 0.3rem 0.75rem;
+  border: none;
+  background: none;
+  color: var(--ifm-color-emphasis-700);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.viewSwitch button.viewActive {
+  background: var(--ifm-color-primary);
+  color: var(--ifm-color-white);
+}
+
+/* ---- Workspace --------------------------------------------------------- */
+
+.workspace {
+  display: grid;
+  gap: 1rem;
+  min-height: 60vh;
+}
+
+.viewSplit {
+  grid-template-columns: 1fr 1fr;
+}
+
+.viewEdit,
+.viewPreview {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 996px) {
+  .viewSplit {
+    grid-template-columns: 1fr;
+  }
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-card-border-radius);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 0.35rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.toolbar button {
+  min-width: 2rem;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--ifm-font-color-base);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.textarea {
+  flex: 1;
+  min-height: 60vh;
+  padding: 1rem;
+  border: none;
+  resize: vertical;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.textarea:focus {
+  outline: none;
+}
+
+.hint {
+  padding: 0.35rem 0.75rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.75rem;
+}
+
+.preview {
+  min-width: 0;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-card-border-radius);
+  overflow-x: auto;
+}
+
+.description {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.05rem;
+}
+
+.compileError {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-color-danger-contrast-background);
+  color: var(--ifm-color-danger-contrast-foreground);
+  font-size: 0.85rem;
+}
+
+.empty {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* ---- Images ------------------------------------------------------------ */
+
+.images {
+  margin-top: 1rem;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.imageGrid figure {
+  margin: 0;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+}
+
+.imageGrid img {
+  display: block;
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+
+.imageGrid figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.7rem;
+}
+
+.imageGrid code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Notices ----------------------------------------------------------- */
+
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 1rem;
+  border-radius: var(--ifm-global-radius);
+  font-size: 0.9rem;
+}
+
+.notice > button {
+  margin-left: auto;
+}
+
+.info {
+  background: var(--ifm-color-info-contrast-background);
+  color: var(--ifm-color-info-contrast-foreground);
+}
+
+.error {
+  background: var(--ifm-color-danger-contrast-background);
+  color: var(--ifm-color-danger-contrast-foreground);
+}
+
+.success {
+  background: var(--ifm-color-success-contrast-background);
+  color: var(--ifm-color-success-contrast-foreground);
+}
+
+.errorText {
+  color: var(--ifm-color-danger);
+}
+
+/* ---- Dialogs ----------------------------------------------------------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgb(0 0 0 / 0.45);
+}
+
+.dialog {
+  width: min(560px, 100%);
+  max-height: 85vh;
+  padding: 1.25rem;
+  border-radius: var(--ifm-card-border-radius);
+  background: var(--ifm-background-surface-color);
+  box-shadow: var(--ifm-global-shadow-tl);
+  overflow-y: auto;
+}
+
+.dialogHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.dialogHead h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  cursor: pointer;
+}
+
+.choice input {
+  margin-top: 0.3rem;
+}
+
+.fileList {
+  margin: 0.25rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.8rem;
+}
+
+.postList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.postList button {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.5rem;
+  border: none;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.postList button:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.postTitle {
+  flex: 1;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-200);
+  font-size: 0.75rem;
+}
+
+/* ---- Setup ------------------------------------------------------------- */
+
+.setup {
+  word-break: keep-all;
+  max-width: 640px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+.setup ol {
+  margin-bottom: 1.25rem;
+}

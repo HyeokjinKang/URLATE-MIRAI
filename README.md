@@ -24,6 +24,12 @@ The dev server only runs one locale at a time. To preview Korean:
 $ npm start -- --locale ko
 ```
 
+### Writing posts
+
+Blog posts and announcements can be written in the browser at `/write` (for example https://mirai.urlate.coupy.dev/write). It commits the English and Korean files, plus any uploaded images, straight to `main` or opens a pull request through the GitHub API, so the site redeploys on its own.
+
+On first use it asks for a fine-grained personal access token limited to this repository with **Contents** and **Pull requests** set to read and write. The token is kept only in that browser's local storage.
+
 ### Build
 
 ```
