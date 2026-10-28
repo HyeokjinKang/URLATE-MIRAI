@@ -239,7 +239,12 @@ html[data-theme="dark"] .header-github-link:before {
 }
 
 .footer__col {
+  margin: 0;
   padding: 0;
+}
+
+.footer__title:empty {
+  display: none;
 }
 
 .footer__items {
@@ -256,6 +261,7 @@ html[data-theme="dark"] .header-github-link:before {
 .footer__link-item,
 .footer__copyright {
   color: var(--mirai-muted);
+  line-height: 1.5;
 }
 
 .footer__link-item:hover {
@@ -271,6 +277,10 @@ html[data-theme="dark"] .header-github-link:before {
   margin: 0;
 }
 
-.footer__copyright {
-  line-height: 1.5;
+@media (max-width: 640px) {
+  .footer .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
 }
