@@ -6,7 +6,6 @@ import {
   readFiles,
   saveDraft,
   savedFiles,
-  type Extension,
   type SaveScope,
 } from "./files";
 import Preview, { checkMdx } from "./Preview";
@@ -319,8 +318,7 @@ function SaveDialog({
   onSaved: () => void;
 }) {
   const [scope, setScope] = useState<SaveScope>("all");
-  const [ext, setExt] = useState<Extension>("md");
-  const files = savedFiles(draft, locale, scope, ext);
+  const files = savedFiles(draft, locale, scope);
   const zip = files.length > 1;
 
   return (
@@ -363,19 +361,6 @@ function SaveDialog({
             </span>
           </span>
         </label>
-        <div className={styles.row}>
-          <span className={styles.muted}>확장자</span>
-          {(["md", "mdx"] as Extension[]).map((e) => (
-            <label key={e} className={styles.check}>
-              <input
-                type="radio"
-                checked={ext === e}
-                onChange={() => setExt(e)}
-              />
-              .{e}
-            </label>
-          ))}
-        </div>
         <p className={styles.muted}>
           {zip ? `${draft.fileName}.zip에 담길 파일` : "저장할 파일"}
         </p>
@@ -393,7 +378,7 @@ function SaveDialog({
           <button
             className="button button--primary"
             onClick={() => {
-              saveDraft(draft, locale, scope, ext);
+              saveDraft(draft, locale, scope);
               onSaved();
             }}
           >

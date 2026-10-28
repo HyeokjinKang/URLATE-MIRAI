@@ -11,7 +11,6 @@ import {
   type PendingImage,
 } from "./post";
 
-export type Extension = "md" | "mdx";
 export type SaveScope = "all" | "locale";
 
 export type LoadedFiles = {
@@ -60,46 +59,29 @@ function download(name: string, data: BlobPart, type: string) {
 
 // ---- Save ------------------------------------------------------------------
 
-function localeFileName(draft: Draft, locale: Locale, ext: Extension) {
-  return `${draft.fileName}${locale === "ko" ? ".ko" : ""}.${ext}`;
+function localeFileName(draft: Draft, locale: Locale) {
+  return `${draft.fileName}${locale === "ko" ? ".ko" : ""}.mdx`;
 }
 
-function repoPath(draft: Draft, locale: Locale, ext: Extension) {
-  return postPath(draft.collection, locale, draft.fileName).replace(
-    /\.mdx$/,
-    `.${ext}`,
-  );
-}
-
-export function savedFiles(
-  draft: Draft,
-  locale: Locale,
-  scope: SaveScope,
-  ext: Extension,
-) {
-  if (scope === "locale") return [localeFileName(draft, locale, ext)];
+export function savedFiles(draft: Draft, locale: Locale, scope: SaveScope) {
+  if (scope === "locale") return [localeFileName(draft, locale)];
   const posts = LOCALES.filter((l) => draft.locales[l].enabled);
   if (posts.length === 1 && draft.images.length === 0)
-    return [localeFileName(draft, posts[0], ext)];
+    return [localeFileName(draft, posts[0])];
   return [
-    ...posts.map((l) => repoPath(draft, l, ext)),
+    ...posts.map((l) => postPath(draft.collection, l, draft.fileName)),
     ...draft.images.map((image) => image.path),
   ];
 }
 
-export function saveDraft(
-  draft: Draft,
-  locale: Locale,
-  scope: SaveScope,
-  ext: Extension,
-) {
+export function saveDraft(draft: Draft, locale: Locale, scope: SaveScope) {
   const posts =
     scope === "locale"
       ? [locale]
       : LOCALES.filter((l) => draft.locales[l].enabled);
   if (posts.length === 1 && (scope === "locale" || draft.images.length === 0)) {
     download(
-      localeFileName(draft, posts[0], ext),
+      localeFileName(draft, posts[0]),
       serialize(draft, posts[0]),
       "text/markdown;charset=utf-8",
     );
@@ -107,7 +89,9 @@ export function saveDraft(
   }
   const entries: Record<string, Uint8Array> = {};
   for (const l of posts)
-    entries[repoPath(draft, l, ext)] = strToU8(serialize(draft, l));
+    entries[postPath(draft.collection, l, draft.fileName)] = strToU8(
+      serialize(draft, l),
+    );
   for (const image of draft.images)
     entries[image.path] = bytesFromBase64(image.base64);
   download(`${draft.fileName}.zip`, zipSync(entries), "application/zip");
