@@ -1,6 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import Editor from "./Editor";
+import {
+  draftFromLoaded,
+  readFiles,
+  saveDraft,
+  savedFiles,
+  type Extension,
+  type SaveScope,
+} from "./files";
 import Preview, { checkMdx } from "./Preview";
 import { BRANCH, GitHub, OWNER, REPO } from "./github";
 import { prepareImage } from "./image";
@@ -12,6 +20,7 @@ import {
   fileNameFromDate,
   newDraft,
   postPath,
+  toLocalInput,
   postUrl,
   serialize,
   slugify,
@@ -298,6 +307,104 @@ function PublishDialog({
   );
 }
 
+function SaveDialog({
+  draft,
+  locale,
+  onClose,
+  onSaved,
+}: {
+  draft: Draft;
+  locale: Locale;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [scope, setScope] = useState<SaveScope>("all");
+  const [ext, setExt] = useState<Extension>("md");
+  const files = savedFiles(draft, locale, scope, ext);
+  const zip = files.length > 1;
+
+  return (
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.dialogHead}>
+          <h2>파일로 저장</h2>
+          <button className="clean-btn" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+        <label className={styles.choice}>
+          <input
+            type="radio"
+            checked={scope === "all"}
+            onChange={() => setScope("all")}
+          />
+          <span>
+            <b>글 전체</b>
+            <br />
+            <span className={styles.muted}>
+              영어·한국어 글과 아직 올리지 않은 이미지를 함께 저장합니다. 파일이
+              여러 개면 저장소 경로 그대로 .zip 하나에 담습니다.
+            </span>
+          </span>
+        </label>
+        <label className={styles.choice}>
+          <input
+            type="radio"
+            checked={scope === "locale"}
+            disabled={!draft.locales[locale].enabled}
+            onChange={() => setScope("locale")}
+          />
+          <span>
+            <b>{LOCALE_LABELS[locale]} 글만</b>
+            <br />
+            <span className={styles.muted}>
+              지금 보고 있는 언어의 글 파일 하나만 저장합니다.
+              {draft.images.length > 0 && " 이미지는 빠집니다."}
+            </span>
+          </span>
+        </label>
+        <div className={styles.row}>
+          <span className={styles.muted}>확장자</span>
+          {(["md", "mdx"] as Extension[]).map((e) => (
+            <label key={e} className={styles.check}>
+              <input
+                type="radio"
+                checked={ext === e}
+                onChange={() => setExt(e)}
+              />
+              .{e}
+            </label>
+          ))}
+        </div>
+        <p className={styles.muted}>
+          {zip ? `${draft.fileName}.zip에 담길 파일` : "저장할 파일"}
+        </p>
+        <ul className={styles.fileList}>
+          {files.map((file) => (
+            <li key={file}>
+              <code>{file}</code>
+            </li>
+          ))}
+        </ul>
+        <div className={styles.dialogActions}>
+          <button className="button button--secondary" onClick={onClose}>
+            취소
+          </button>
+          <button
+            className="button button--primary"
+            onClick={() => {
+              saveDraft(draft, locale, scope, ext);
+              onSaved();
+            }}
+          >
+            저장
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Writer() {
   const [token, setToken] = useState<string | null>(() => storage(TOKEN_KEY));
   const [user, setUser] = useState<User | null>(null);
@@ -313,6 +420,8 @@ export default function Writer() {
   const [view, setView] = useState<View>("split");
   const [listOpen, setListOpen] = useState(false);
   const [publishOpen, setPublishOpen] = useState(false);
+  const [saveOpen, setSaveOpen] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
 
@@ -398,6 +507,44 @@ export default function Writer() {
       setNotice({
         kind: "error",
         text: `불러오기 실패: ${(e as Error).message}`,
+      });
+    }
+  };
+
+  const openLocalFiles = async (files: File[]) => {
+    if (files.length === 0 || !confirmDiscard()) return;
+    setNotice({ kind: "info", text: "파일을 여는 중…" });
+    try {
+      const loaded = await readFiles(files);
+      let collection = loaded.collection;
+      let isNew = true;
+      if (github && /^[A-Za-z0-9_-]+$/.test(loaded.fileName)) {
+        const candidates = collection
+          ? [collection]
+          : (Object.keys(COLLECTIONS) as Collection[]);
+        for (const c of candidates) {
+          if (await github.readFile(postPath(c, "en", loaded.fileName))) {
+            collection = c;
+            isNew = false;
+            break;
+          }
+        }
+      }
+      const next = draftFromLoaded(loaded, collection ?? "blog", isNew);
+      if (!next.date && isNew) next.date = toLocalInput(new Date());
+      setDraft(next);
+      setBaseline(JSON.stringify(next));
+      setLocale(next.locales.en.enabled ? "en" : "ko");
+      setNotice({
+        kind: "success",
+        text: isNew
+          ? `${loaded.fileName} 글을 열었습니다. 사이트에 없는 글이라 새 글로 게시됩니다.`
+          : `${loaded.fileName} 글을 열었습니다. 게시하면 사이트의 ${COLLECTIONS[next.collection].label} 글을 이 내용으로 고칩니다.`,
+      });
+    } catch (e) {
+      setNotice({
+        kind: "error",
+        text: `파일 열기 실패: ${(e as Error).message}`,
       });
     }
   };
@@ -576,6 +723,30 @@ export default function Writer() {
           >
             불러오기
           </button>
+          <button
+            className="button button--sm button--secondary"
+            onClick={() => fileInput.current?.click()}
+          >
+            파일 열기
+          </button>
+          <button
+            className="button button--sm button--secondary"
+            onClick={() => setSaveOpen(true)}
+          >
+            파일로 저장
+          </button>
+          <input
+            ref={fileInput}
+            type="file"
+            accept=".md,.mdx,.zip"
+            multiple
+            hidden
+            onChange={(e) => {
+              const files = Array.from(e.target.files ?? []);
+              e.target.value = "";
+              void openLocalFiles(files);
+            }}
+          />
           <button
             className="button button--sm button--primary"
             onClick={() => void requestPublish()}
@@ -817,6 +988,17 @@ export default function Writer() {
           github={github}
           onOpen={(item) => void openPost(item)}
           onClose={() => setListOpen(false)}
+        />
+      )}
+      {saveOpen && (
+        <SaveDialog
+          draft={draft}
+          locale={locale}
+          onClose={() => setSaveOpen(false)}
+          onSaved={() => {
+            setSaveOpen(false);
+            setBaseline(JSON.stringify(draft));
+          }}
         />
       )}
       {publishOpen && (
