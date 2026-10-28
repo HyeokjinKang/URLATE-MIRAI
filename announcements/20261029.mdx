@@ -1,0 +1,130 @@
+---
+title: Refactored Judgment & Note Handling Mechanics
+date: 2026-10-29T09:00:00+09:00
+hide_table_of_contents: true
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+{/* truncate */}
+
+Hello! This is Coupy, the developer of URLATE.  
+Thank you so much for always playing.
+
+Since its early access launch on May 17, 2025, we have been steadily improving URLATE.  
+Until now, the judgement windows and note handling were far too lenient compared to other rhythm games, and they lacked consistency: the length of each window changed with the song's BPM and the chart's speed. Because this didn't match the gameplay we want URLATE to have, we have completely reworked the judgement system in this update.
+
+Here are the details of the new judgement system and note handling that ship with v1.0.0-RC.6.
+
+## Summary
+
+- **Flip Notes** now have timing judgements.
+- **Hold Notes** now have a release judgement, and your combo and score go up every beat while you hold.
+- **Judgement windows** are now measured in time (frames) instead of beats, so they stay the same length regardless of the song's BPM or the chart's speed.
+- **Accuracy** and **score multipliers** have been unified.
+- **Existing records** have had their accuracy, rank and rating recalculated to the new standard. Scores remain unchanged.
+
+## Flip Notes
+
+Flip Notes now have timing judgements.  
+Until now, scrolling in the right direction at any time while the note was on screen always counted as `Perfect`, and that judgement wasn't reflected in your accuracy.  
+From now on, they are judged as `Perfect`, `Great`, `Good` or `Miss` according to the [judgement windows](#judgement-windows), and count toward accuracy just like every other note.
+
+## Hold Notes
+
+Hold Notes are now handled in three parts: `press`, `hold` and `release`.
+
+The press and the release are each judged, and while you hold, a tick lands every beat and raises your combo by 1.  
+Your score is split across the ticks as well. Previously, a Hold Note gave you the score of two judgements, one on press and one at the end. Now that same score is divided across all of its ticks. The total base score of a Hold Note is the same as before, and only increases slightly from the combo bonus added on each tick.
+
+| Situation | Before | Now |
+| :--- | :------ | :--- |
+| Not hit at all | 1 Miss | 2 Misses |
+| While holding | - | Combo +1 and extra score every beat |
+| On release | Miss if released more than 1/3 beat early, otherwise Perfect | Judged by the [judgement windows](#judgement-windows) |
+| Released late | Automatic Perfect at the end of the note | Automatic Bad once the window has passed |
+
+:::warning
+Simply holding until the end no longer counts as `Perfect`. It is now judged as `Bad`, and your combo breaks.  
+Please release on the beat where the Hold Note ends.
+:::
+
+## Judgement Windows
+
+Judgement windows are now fixed lengths of time measured in 60fps frames (1F ≈ 16.7ms).  
+Previously, judgement was measured in beats, so songs with a faster BPM had tighter windows, and the point at which a late note became a Miss depended on the chart's speed. Now every song uses the same windows, and **each note type has its own windows**.
+
+<Tabs>
+  <TabItem value="prev" label="Before">
+
+    ![Judgement windows before the rework](/img/20261028/judgement-old-en.webp)
+
+    Values converted for a 140BPM song at chart speed 1. In practice they varied with the song's BPM.
+
+    | Note | Perfect | Great | Good | Bad |
+    | :--- | :------ | :---- | :--- | :-- |
+    | **Tap Note · Hold start** | ±71ms | ±143ms | -214ms | -429ms ~ until the note disappears |
+    | **Flip Note** | Any time while visible | - | - | - |
+    | **Hold end** | -143ms ~ end of the note | - | - | - |
+
+  </TabItem>
+  <TabItem value="now" label="Now" default>
+
+    ![Current judgement windows](/img/20261028/judgement-new-en.webp)
+
+    | Note | Perfect | Great | Good | Bad | Outside |
+    | :--- | :------ | :---- | :--- | :-- | :------ |
+    | **Tap Note · Hold start** | ±3F<br/>(±50ms) | ±7F<br/>(±117ms) | ±12F<br/>(±200ms) | ±18F<br/>(±300ms) | Early: input ignored,<br/>Late: Miss |
+    | **Flip Note** | ±5F<br/>(±83ms) | ±12F<br/>(±200ms) | ±18F<br/>(±300ms) | - | Early: input ignored,<br/>Late: Miss |
+    | **Hold end** | −3F ~ +5F<br/>(−50ms ~ +83ms) | −8F ~ +10F<br/>(−133ms ~ +167ms) | −14F ~ +16F<br/>(−233ms ~ +267ms) | After +16F<br/>(+267ms) | Miss if released before −14F<br/>(−233ms) |
+
+  </TabItem>
+</Tabs>
+
+## Score and Accuracy
+
+The score multipliers and accuracy multipliers for each judgement have been unified.  
+The new multipliers are derived from the [judgement windows](#judgement-windows) so that they are 100% at the edge of Perfect and 0% at the edge of Miss.
+
+| Judgement | Accuracy (before → after) | Score (before → after) |
+| :--- | :--------------- | :------------- |
+| Perfect | 100% | 100% |
+| Great | 70% → 80% | 50% → 80% |
+| Good | 50% → 40% | 20% → 40% |
+| Bad | 30% → 10% | 5% → 10% |
+| Miss | 0% | 0% |
+
+## Existing Records
+
+Existing records have not been deleted. Instead, some of their values have been recalculated to the new standard from the judgement counts we had stored.
+
+| Scope | Recalculated | Unchanged |
+| :--- | :--------------- | :----------------- |
+| Per record | Accuracy, rank (SS–F), clear status, rating | Score, judgement counts, max combo, FC/AP marks, date |
+| Per player | Total rating, average accuracy, clear count | Total score, play time, number of #1 records |
+| Rankings | Rating ranking | Score ranking |
+
+That said, there are a few limitations.
+
+- **Score**  
+  A score depends on the order of the judgements and your combo at each moment, so it couldn't be recalculated from the stored judgement counts alone. Scores on existing records therefore remain on the old multipliers.
+- **Judgements**  
+  The judgements on existing records came from the old judgement windows. Even with accuracy and rank recalculated using the new multipliers, they aren't on exactly the same footing as records played under the new system.
+- **Max combo**  
+  Because Hold Notes now add combo on every tick, playing the same chart with the same judgements will give a new record a higher max combo and score than an old one.
+
+Even so, we wanted to preserve the records you've set as much as we could, so we chose to recalculate rather than reset them. We kindly ask for your understanding regarding any differences between old and new records.
+
+## Closing
+
+URLATE is still in the process of establishing its identity as a rhythm bullet-hell shooter.  
+With this rework, we focused a bit more on the **rhythm game** side, with the design goal of asking for more concentration to hit notes accurately.  
+Changing the judgement and note handling while existing records were already in place was not an easy decision, but it was a necessary change, so we approached it with extra care.  
+We hope this change makes URLATE an even more fun game.
+
+As we are still in early access, the judgement windows may be adjusted further based on your feedback and play records. If anything feels off, please feel free to let us know any time on [Discord](https://discord.gg/YMhYzPbEYV).
+
+We sincerely thank everyone who has shown interest in URLATE, and we hope you'll continue to support us.
+
+Thank you.
