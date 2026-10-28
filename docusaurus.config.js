@@ -12,7 +12,7 @@ module.exports = async function createConfig() {
   };
 
   return {
-    title: "URLATE MIRAI",
+    title: "MIRAI",
     tagline: "URLATE announcements, updates and documentation",
     url: "https://mirai.urlate.coupy.dev",
     baseUrl: "/",
@@ -146,7 +146,7 @@ module.exports = async function createConfig() {
           title: "MIRAI",
           hideOnScroll: true,
           logo: {
-            alt: "URLATE MIRAI",
+            alt: "MIRAI",
             src: "img/icon.webp",
             href: "/blog",
           },
