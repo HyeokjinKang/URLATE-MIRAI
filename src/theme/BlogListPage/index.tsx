@@ -14,13 +14,11 @@ import BlogListPaginator from "@theme/BlogListPaginator";
 import SearchMetadata from "@theme/SearchMetadata";
 import BlogListPageStructuredData from "@theme/BlogListPage/StructuredData";
 import type { Props } from "@theme/BlogListPage";
+import { stripTitleDate } from "../../utils/postTitle";
 
 import styles from "./styles.module.css";
 
 type Item = Props["items"][number];
-
-const TITLE_DATE_PREFIX =
-  /^\s*\d{4}[.\-/]\s*\d{1,2}[.\-/]\s*\d{1,2}\.?\s*\|\s*/;
 
 function usePostDate() {
   const format = useDateTimeFormat({
@@ -83,7 +81,7 @@ function Row({ item }: { item: Item }) {
           {formatDate(metadata.date)}
         </time>
         <span className={styles.rowTitle}>
-          {metadata.title.replace(TITLE_DATE_PREFIX, "")}
+          {stripTitleDate(metadata.title)}
         </span>
       </Link>
     </li>

@@ -103,9 +103,9 @@ html[data-theme="dark"] .header-github-link:before {
 }
 
 .navbar__title {
-  font-size: 1.125rem;
+  font-size: 1rem;
+  line-height: var(--ifm-line-height-base);
   font-weight: 800;
-  letter-spacing: 0.04em;
 }
 
 .navbar__link {
@@ -153,9 +153,37 @@ html[data-theme="dark"] .header-github-link:before {
   border-bottom: 1px solid var(--mirai-border);
 }
 
+.blog-post-page .avatar {
+  align-items: center;
+}
+
+.blog-post-page .avatar__photo-link {
+  display: flex;
+}
+
 .blog-post-page .avatar__photo {
   width: 2.5rem;
   height: 2.5rem;
+}
+
+.blog-post-page .avatar__intro {
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.blog-post-page .avatar__intro > :empty {
+  display: none;
+}
+
+.blog-post-page .avatar__name span {
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.blog-post-page .avatar__intro small {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--mirai-muted);
 }
 
 .blog-post-page .avatar__name a {
