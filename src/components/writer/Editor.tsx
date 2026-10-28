@@ -216,6 +216,27 @@ export default function Editor({
       el.setSelectionRange(result.start, result.end);
       return;
     }
+    const old = el.value;
+    let prefix = 0;
+    const max = Math.min(old.length, result.value.length);
+    while (prefix < max && old[prefix] === result.value[prefix]) prefix++;
+    let suffix = 0;
+    while (
+      suffix < max - prefix &&
+      old[old.length - 1 - suffix] ===
+        result.value[result.value.length - 1 - suffix]
+    )
+      suffix++;
+    const inserted = result.value.slice(prefix, result.value.length - suffix);
+    el.focus();
+    el.setSelectionRange(prefix, old.length - suffix);
+    const native = inserted
+      ? document.execCommand("insertText", false, inserted)
+      : document.execCommand("delete");
+    if (native && el.value === result.value) {
+      el.setSelectionRange(result.start, result.end);
+      return;
+    }
     selection.current = [result.start, result.end];
     onChange(result.value);
   };
