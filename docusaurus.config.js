@@ -171,9 +171,6 @@ module.exports = async function createConfig() {
           links: [
             {
               items: [
-                { label: "Blog", to: "/blog" },
-                { label: "Announcements", to: "/announcements" },
-                { label: "Docs", to: "/docs" },
                 { label: "RSS", href: "pathname:///blog/rss.xml" },
                 { label: "URLATE", href: "https://urlate.coupy.dev" },
                 {

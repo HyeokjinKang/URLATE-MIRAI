@@ -1,16 +1,4 @@
 {
-  "link.item.label.Blog": {
-    "message": "블로그",
-    "description": "The label of footer link with label=Blog linking to /blog"
-  },
-  "link.item.label.Announcements": {
-    "message": "공지사항",
-    "description": "The label of footer link with label=Announcements linking to /announcements"
-  },
-  "link.item.label.Docs": {
-    "message": "문서",
-    "description": "The label of footer link with label=Docs linking to /docs"
-  },
   "link.item.label.RSS": {
     "message": "RSS",
     "description": "The label of footer link with label=RSS linking to pathname:///blog/rss.xml"
