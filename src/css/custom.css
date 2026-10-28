@@ -4,6 +4,45 @@
     system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", "Malgun Gothic", sans-serif;
   --ifm-heading-font-family: var(--ifm-font-family-base);
+  --ifm-color-primary: #6d4fe8;
+  --ifm-color-primary-dark: #5c3be4;
+  --ifm-color-primary-darker: #5432e2;
+  --ifm-color-primary-darkest: #4220c4;
+  --ifm-color-primary-light: #7e63eb;
+  --ifm-color-primary-lighter: #876eed;
+  --ifm-color-primary-lightest: #a291f1;
+  --ifm-background-color: #ffffff;
+  --ifm-font-color-base: #1c1c1f;
+  --ifm-heading-color: #111114;
+  --ifm-navbar-height: 4rem;
+  --ifm-navbar-shadow: none;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.82);
+  --ifm-footer-background-color: transparent;
+  --ifm-global-radius: 10px;
+  --ifm-pagination-nav-border-radius: 14px;
+  --ifm-code-font-size: 90%;
+  --mirai-muted: #6b6b76;
+  --mirai-border: #ececf0;
+  --mirai-surface: #f6f6f8;
+  --mirai-gradient: linear-gradient(135deg, #6c8cff, #a24bf5);
+}
+
+html[data-theme="dark"] {
+  --ifm-color-primary: #a693ff;
+  --ifm-color-primary-dark: #8f77ff;
+  --ifm-color-primary-darker: #8369ff;
+  --ifm-color-primary-darkest: #5e3dff;
+  --ifm-color-primary-light: #bdafff;
+  --ifm-color-primary-lighter: #c9bdff;
+  --ifm-color-primary-lightest: #ebe6ff;
+  --ifm-background-color: #0f0f12;
+  --ifm-background-surface-color: #0f0f12;
+  --ifm-font-color-base: #e4e4e9;
+  --ifm-heading-color: #f4f4f7;
+  --ifm-navbar-background-color: rgba(15, 15, 18, 0.8);
+  --mirai-muted: #9a9aa6;
+  --mirai-border: #24242b;
+  --mirai-surface: #18181d;
 }
 
 html {
@@ -19,7 +58,6 @@ html {
    both. Promoting the remaining layout regions makes it grayscale
    throughout. These are region wrappers, not individual elements, so this
    costs a handful of layers rather than one per text node. */
-.theme-layout-navbar,
 .theme-layout-main,
 .theme-doc-sidebar-container {
   will-change: transform;
@@ -41,4 +79,170 @@ html {
 html[data-theme="dark"] .header-github-link:before {
   background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
     no-repeat;
+}
+
+/* ---- Navbar ------------------------------------------------------------ */
+
+.navbar {
+  border-bottom: 1px solid var(--mirai-border);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+}
+
+.navbar.navbar-sidebar--show {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.navbar__brand {
+  margin-right: 1.5rem;
+}
+
+.navbar__logo {
+  height: 1.5rem;
+}
+
+.navbar__title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.navbar__link {
+  font-weight: 500;
+  color: var(--mirai-muted);
+}
+
+.navbar__link--active,
+.navbar__link:hover {
+  color: var(--ifm-heading-color);
+}
+
+.navbar-sidebar {
+  background: var(--ifm-background-color);
+}
+
+.navbar-sidebar .menu__link {
+  padding: 0.75rem 1rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+/* ---- Blog post --------------------------------------------------------- */
+
+.blog-post-page main > article {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.blog-post-page article header h1 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.blog-post-page article header time,
+.blog-post-page article header [class*="container_"] {
+  color: var(--mirai-muted);
+}
+
+.blog-post-page article header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--mirai-border);
+}
+
+.blog-post-page .avatar__photo {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.blog-post-page .avatar__name a {
+  color: var(--ifm-heading-color);
+}
+
+.blog-post-page .markdown {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.blog-post-page .markdown img {
+  border-radius: 12px;
+}
+
+.blog-post-page .pagination-nav {
+  max-width: 720px;
+  margin: 3rem auto 0;
+}
+
+.blog-wrapper .pagination-nav__link {
+  border-color: var(--mirai-border);
+}
+
+.blog-wrapper .pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+/* ---- Footer ------------------------------------------------------------ */
+
+.footer {
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--mirai-border);
+  font-size: 0.9375rem;
+}
+
+.footer .container {
+  max-width: 960px;
+  padding: 0 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer__links {
+  margin: 0;
+}
+
+.footer__links > .row {
+  margin: 0;
+}
+
+.footer__col {
+  padding: 0;
+}
+
+.footer__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.footer__item {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.footer__link-item,
+.footer__copyright {
+  color: var(--mirai-muted);
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+}
+
+.footer__link-item svg {
+  display: none;
+}
+
+.footer__bottom {
+  margin: 0;
+}
+
+.footer__copyright {
+  line-height: 1.5;
 }

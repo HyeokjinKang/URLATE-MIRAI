@@ -77,9 +77,11 @@ module.exports = async function createConfig() {
           },
           blog: {
             path: "blog",
-            routeBasePath: "/",
-            blogTitle: "URLATE Blog",
-            blogDescription: "URLATE announcements and updates",
+            routeBasePath: "blog",
+            blogTitle: "MIRAI",
+            blogDescription: "Stories from the making of URLATE",
+            blogSidebarCount: 0,
+            postsPerPage: 13,
             onInlineAuthors: "ignore",
             onUntruncatedBlogPosts: "ignore",
             ...markdownPlugins,
@@ -109,11 +111,24 @@ module.exports = async function createConfig() {
         }),
       }),
       [
+        "@docusaurus/plugin-client-redirects",
+        /** @type {import('@docusaurus/plugin-client-redirects').Options} */
+        ({
+          redirects: [{ from: "/", to: "/blog" }],
+          createRedirects: (existingPath) =>
+            existingPath.startsWith("/blog/")
+              ? existingPath.slice("/blog".length)
+              : undefined,
+        }),
+      ],
+      [
         "@docusaurus/plugin-content-blog",
         /** @type {import('@docusaurus/plugin-content-blog').Options} */
         ({
           id: "announcements",
           routeBasePath: "announcements",
+          blogTitle: "Announcements",
+          blogDescription: "Notices for URLATE players",
           path: "./announcements",
           blogSidebarCount: 0,
           onInlineAuthors: "ignore",
@@ -128,14 +143,17 @@ module.exports = async function createConfig() {
       ({
         image: "img/icon.webp",
         navbar: {
-          title: "URLATE MIRAI",
+          title: "MIRAI",
+          hideOnScroll: true,
           logo: {
-            alt: "Logo",
+            alt: "URLATE MIRAI",
             src: "img/icon.webp",
+            href: "/blog",
           },
           items: [
-            { to: "/docs", label: "Docs", position: "left" },
+            { to: "/blog", label: "Blog", position: "left" },
             { to: "/announcements", label: "Announcements", position: "left" },
+            { to: "/docs", label: "Docs", position: "left" },
             {
               type: "localeDropdown",
               position: "right",
@@ -148,6 +166,24 @@ module.exports = async function createConfig() {
               target: "_blank",
             },
           ],
+        },
+        footer: {
+          links: [
+            {
+              items: [
+                { label: "Blog", to: "/blog" },
+                { label: "Announcements", to: "/announcements" },
+                { label: "Docs", to: "/docs" },
+                { label: "RSS", href: "pathname:///blog/rss.xml" },
+                { label: "URLATE", href: "https://urlate.coupy.dev" },
+                {
+                  label: "GitHub",
+                  href: "https://github.com/HyeokjinKang/URLATE",
+                },
+              ],
+            },
+          ],
+          copyright: `© ${new Date().getFullYear()} Coupyworks`,
         },
         colorMode: {
           defaultMode: "light",

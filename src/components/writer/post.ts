@@ -18,7 +18,7 @@ export const COLLECTIONS: Record<
     label: "블로그",
     dir: "blog",
     koDir: "i18n/ko/docusaurus-plugin-content-blog",
-    route: "",
+    route: "/blog",
   },
   announcements: {
     label: "공지",

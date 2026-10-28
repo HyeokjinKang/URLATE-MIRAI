@@ -1,10 +1,10 @@
 {
   "title": {
-    "message": "URLATE MIRAI",
+    "message": "MIRAI",
     "description": "The title in the navbar"
   },
   "logo.alt": {
-    "message": "Logo",
+    "message": "URLATE MIRAI",
     "description": "The alt text of navbar logo"
   },
   "item.label.Docs": {
@@ -14,5 +14,9 @@
   "item.label.Announcements": {
     "message": "Announcements",
     "description": "Navbar item with label Announcements"
+  },
+  "item.label.Blog": {
+    "message": "Blog",
+    "description": "Navbar item with label Blog"
   }
 }
