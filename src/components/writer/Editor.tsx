@@ -5,17 +5,21 @@ import React, {
   type DragEvent,
   type KeyboardEvent,
 } from "react";
+import {
+  backspace,
+  enter,
+  indentLines,
+  lineBreak,
+  moveLines,
+  outdentLines,
+  surround,
+  tab,
+  type Change,
+  type Command,
+} from "./keymap";
 import styles from "./styles.module.css";
 
-type Edit = (
-  value: string,
-  start: number,
-  end: number,
-) => {
-  value: string;
-  start: number;
-  end: number;
-};
+type Edit = (value: string, start: number, end: number) => Change;
 
 function wrap(before: string, after = before, placeholder = ""): Edit {
   return (value, start, end) => {
@@ -200,6 +204,7 @@ export default function Editor({
   const ref = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const selection = useRef<[number, number] | null>(null);
+  const tabEscape = useRef(false);
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -209,12 +214,13 @@ export default function Editor({
     selection.current = null;
   }, [value]);
 
-  const apply = (edit: Edit) => {
+  const apply = (edit: Command) => {
     const el = ref.current!;
     const result = edit(el.value, el.selectionStart, el.selectionEnd);
+    if (!result) return false;
     if (result.value === el.value) {
       el.setSelectionRange(result.start, result.end);
-      return;
+      return true;
     }
     const old = el.value;
     let prefix = 0;
@@ -235,10 +241,11 @@ export default function Editor({
       : document.execCommand("delete");
     if (native && el.value === result.value) {
       el.setSelectionRange(result.start, result.end);
-      return;
+      return true;
     }
     selection.current = [result.start, result.end];
     onChange(result.value);
+    return true;
   };
 
   const insertImages = async (files: File[]) => {
@@ -255,44 +262,32 @@ export default function Editor({
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     const mod = e.ctrlKey || e.metaKey;
-    if (mod && e.key.toLowerCase() === "b") {
-      e.preventDefault();
-      apply(TOOLS[0].edit);
-    } else if (mod && e.key.toLowerCase() === "i") {
-      e.preventDefault();
-      apply(TOOLS[1].edit);
-    } else if (mod && e.key.toLowerCase() === "k") {
-      e.preventDefault();
-      apply(TOOLS[7].edit);
-    } else if (e.key === "Enter" && e.shiftKey) {
-      e.preventDefault();
-      apply((v, s, en) => ({
-        value: `${v.slice(0, s)}  \n${v.slice(en)}`,
-        start: s + 3,
-        end: s + 3,
-      }));
-    } else if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-      const el = e.currentTarget;
-      const lineStart = el.value.lastIndexOf("\n", el.selectionStart - 1) + 1;
-      const line = el.value.slice(lineStart, el.selectionStart);
-      const match = line.match(/^(\s*)(- |\* |> |(\d+)\. )/);
-      if (!match) return;
-      e.preventDefault();
-      if (line === match[0]) {
-        apply((v, s, en) => ({
-          value: v.slice(0, lineStart) + v.slice(en),
-          start: lineStart,
-          end: lineStart,
-        }));
-        return;
-      }
-      const marker = match[3] ? `${Number(match[3]) + 1}. ` : match[2];
-      const insert = `\n${match[1]}${marker}`;
-      apply((v, s, en) => ({
-        value: v.slice(0, s) + insert + v.slice(en),
-        start: s + insert.length,
-        end: s + insert.length,
-      }));
+    const key = e.key.toLowerCase();
+    const escaped = tabEscape.current;
+    tabEscape.current = e.key === "Escape";
+    const run = (command: Command) => {
+      if (apply(command)) e.preventDefault();
+    };
+    if (mod && !e.altKey && !e.shiftKey) {
+      if (key === "b") run(TOOLS[0].edit);
+      else if (key === "i") run(TOOLS[1].edit);
+      else if (key === "k") run(TOOLS[7].edit);
+      else if (e.key === "]") run(indentLines);
+      else if (e.key === "[") run(outdentLines);
+      return;
+    }
+    if (mod || e.nativeEvent.isComposing || e.keyCode === 229) return;
+    if (e.key === "Tab") {
+      if (!escaped && !e.altKey) run(e.shiftKey ? outdentLines : tab);
+    } else if (e.altKey) {
+      if (e.key === "ArrowUp") run(moveLines(-1));
+      else if (e.key === "ArrowDown") run(moveLines(1));
+    } else if (e.key === "Enter") {
+      run(e.shiftKey ? lineBreak : enter);
+    } else if (e.key === "Backspace" && !e.shiftKey) {
+      run(backspace);
+    } else {
+      run(surround(e.key));
     }
   };
 
@@ -375,8 +370,8 @@ export default function Editor({
         onDragOver={(e) => e.preventDefault()}
       />
       <div className={styles.hint}>
-        Shift+Enter 줄바꿈 · Enter 두 번 문단 나누기 · Ctrl+B 굵게 · Ctrl+K 링크
-        ·{" "}
+        Shift+Enter 줄바꿈 · Enter 두 번 문단 나누기 · Tab/Shift+Tab 들여쓰기 ·
+        Alt+↑↓ 줄 옮기기 · Esc 뒤 Tab 다음 칸으로 · Ctrl+B 굵게 · Ctrl+K 링크 ·{" "}
         <a
           href="https://docusaurus.io/docs/markdown-features"
           target="_blank"
