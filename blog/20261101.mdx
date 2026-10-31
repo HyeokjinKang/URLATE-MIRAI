@@ -1,0 +1,174 @@
+---
+title: URLATE Development Progress Update
+description: Here's where URLATE's development stands as of November 2026.
+slug: urlate-development-progress-update
+date: 2026-11-01T09:00:00+09:00
+authors:
+  - name: Coupy (Kang Hyeokjin)
+    title: Founder
+    url: https://github.com/HyeokjinKang
+    image_url: /img/coupy.webp
+hide_table_of_contents: false
+---
+
+![](/img/20261101/dpu.webp)
+
+{/* truncate */}
+
+Hello, this is Kang Hyeokjin (Coupy), the developer of URLATE.  
+This is my first update since early access began.
+
+It's already been a year and a half since [my last post](https://mirai.urlate.coupy.dev/blog/urlate-early-access).  
+Since [joining the Navy](https://x.com/coupyworks/status/1939419418825760808) last June, I've tried hard to keep development going, but it turned out to be harder than I expected.
+
+The biggest obstacle was **making patterns**.  
+Since early access began, [only](https://youtu.be/FKY9OoLCv48) [three](https://youtu.be/F7wHIcvfHF0) [patterns](https://youtu.be/mDUqfkVUf_Y) have been made.  
+I talked about how hard pattern production is in [a post from 2024](https://mirai.urlate.coupy.dev/blog/urlate-dev-progress#pattern-production-progress), but now I really think I need to find another way.  
+At this rate, I might end up making patterns for the rest of my life..
+
+But it wasn't all obstacles.  
+Thanks to advances in [AI](https://claude.ai/), I was able to keep improving the game even with so little time.  
+[v1.0.0-rc.1](https://github.com/HyeokjinKang/URLATE/releases/tag/v1.0.0-rc.1) was released when early access began, and since then there have been [789 commits](https://github.com/HyeokjinKang/URLATE/compare/v1.0.0-rc.1...main).  
+Considering that the whole project has [1,451 commits](https://github.com/HyeokjinKang/URLATE/commits/main/) in total, that's a huge amount.
+
+That was a long introduction.  
+As of writing, [v1.0.0-rc.6](https://github.com/HyeokjinKang/URLATE/releases/tag/v1.0.0-rc.6) is live.  
+Let me go over what has changed since early access began, and what's left before the **full release**.
+
+## Landing Page
+
+![The new landing page](/img/20261101/index.webp)
+
+- **The landing page has been completely redesigned!**
+  - You can see the latest announcements and blog posts right away.
+  - A short introduction to the game has been added.
+  - The version of the game you're on is shown in the top left corner.
+- **One-click sign-in** is now available through the [FedCM API](https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API).
+- The info, privacy policy and error pages have been redesigned as well.
+
+## Gameplay
+
+![Refined gameplay](/img/20261101/play.webp)
+
+### Judgement and Score
+- Judgement windows have been redefined **in frames**, and the combined accuracy and score multipliers have been recalculated.
+- Hold notes now have **`release judgement`** and **`ticks`**.
+- **Timing judgement** is back for wheel notes.
+- For details, see [**Refactored Judgment & Note Handling Mechanics**](https://mirai.urlate.coupy.dev/announcements/20261029).
+
+### Effects and Sound
+- **Judgement effects** have been reworked.
+  - A lens flare effect appears on `Perfect` judgements.
+  - FAST/LATE text is shown depending on your timing.
+  - A dust effect that scales with the judgement has been added.
+  - A wave effect has been added to the text.
+  - The ripple effect has been slightly tweaked.
+- I made six hitsounds you can choose from.
+  - Each hold note tick plays a tick sound that matches your hitsound.
+- The bullet destruction effect has been improved.
+
+### Controls
+- **AUTO PLAY** has been added.
+- You now have to click where you paused to resume the game.
+- The cursor is locked during play using the [Pointer Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API).
+- A Raw Input option has been added.
+- Input through [pointerrawupdate](https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerrawupdate_event) is supported, so the cursor is tracked more quickly.
+- Sensitivity can now be set anywhere from 0.25x to 3x.
+- Playback speed can be set from 0.5x to 2x in steps of 0.1.
+
+### Sync
+- A V-Sync option has been added.
+  - When V-Sync is off, the screen switches to low-latency mode.
+- A visual sync offset has been added.
+
+### Song Select
+- Mod settings such as sort order and difficulty are remembered.
+  - They're saved to your account, so they carry over when you play from another device.
+
+### Bug Fixes
+- Fixed frame drops when the AP/FC effect was shown
+- Fixed the combo text causing performance drops
+- Fixed the explosion effect appearing multiple times
+- Fixed the bullet destruction effect appearing in the wrong place
+- Fixed the visualizer on the song select screen not displaying as intended
+- Fixed several songs playing at once when switching songs quickly
+- Fixed bullets moving along a different path than the angle they were drawn at
+- Fixed three issues with `retry`
+
+## Settings
+
+![The new settings screen](/img/20261101/settings.webp)
+
+- **The settings screen has been redesigned!**
+  - The offset and visual sync pages have been redesigned with it.
+- Sliders and dropdowns can now be adjusted with the mouse wheel.
+- Slider values can now be typed in directly.
+
+## Editor
+
+![The reworked editor](/img/20261101/editor.webp)
+
+### Test and Preview
+- **AUTO PLAY** has been added to both test and preview.
+
+### Timeline
+- Triggers and hold notes now have **a bar showing their duration**.
+- **Scrollbars** have been added for easier navigation.
+- **Filters by element type** have been added.
+- Note and trigger types can now be told apart.
+- The overlap prevention algorithm has been improved.
+- Fixed various small but annoying issues.
+
+### Selection and Editing
+- Horizontal, vertical and point reflection have been added.
+- Multi-selection has been added.
+  - Select or deselect with `Ctrl/Shift + Click` and `Drag`.
+  - Drag selected elements together, move them by the beat division with `Alt + Arrow keys`, or reflect them.
+  - When elements of the same type are selected, their properties can be edited all at once in the settings panel.
+- `Range Copy/Paste` has been removed and merged into `Copy/Paste`.
+  - Combined with multi-selection, it gives you a familiar editing experience.
+  - The clipboard is saved, so you can paste the same elements after reloading, switching songs or moving to another tab.
+- With the `File System Access API`, saving a pattern now overwrites the existing file instead of downloading a new one each time.
+  - As of writing, this only works in Chromium-based browsers such as `Chrome` and `Edge`.
+- Unsaved changes are marked with `*`, and you're warned when leaving the page.
+- A metronome plays along with the beat.
+
+### Pattern Version 1.1
+- **Triggers that change gradually** toward a target value over a set duration are now supported.
+  - They're available for Speed, BPM and Opacity.
+
+## Road to the Full Release
+
+With this many changes, I think the game's fundamentals are now mostly in place.  
+From judgement and controls to effects and the editor, I was able to fix most of what had been bothering me.
+
+The biggest task left is, of course, **patterns**.  
+So that you can enjoy a range of difficulties on every song by the full release, I'm rethinking the pattern production process itself.  
+The big editor overhaul this time is part of that preparation.
+
+Here's roughly what's left to do.
+- **Making patterns**
+- Improving the song select screen
+  - Reorganizing mods (playback speed, etc.)
+- Adding profile reporting
+- Security review and improvements
+
+## Closing
+
+Balancing development with military service, it took me over a year to share an update.  
+I'm sorry for the wait, and grateful to everyone who stuck around.
+
+Going forward, I'm thinking of running MIRAI more like a tech blog.  
+I plan to write about stories from making the game, the choices I wrestled with, and the technical side of things.  
+I'll try to come back more often with all kinds of stories.
+
+I'll keep going and keep making URLATE better, so I can give back to all of you.  
+Thank you, as always.
+
+## Stay Connected
+
+If you have thoughts from playing, ideas for improvements or bug reports, please feel free to share them in our Discord server.
+
+- [Discord](https://discord.gg/YMhYzPbEYV)
+- [X (Twitter)](https://twitter.com/urlate_)
+- [YouTube](https://www.youtube.com/@coupyworks)
