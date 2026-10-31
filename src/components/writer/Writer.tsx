@@ -1,4 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 import clsx from "clsx";
 import Editor from "./Editor";
 import {
@@ -10,13 +17,14 @@ import {
 } from "./files";
 import Preview, { checkMdx } from "./Preview";
 import { BRANCH, GitHub, OWNER, REPO } from "./github";
-import { prepareImage } from "./image";
+import { dataUrl, prepareImage } from "./image";
 import {
   COLLECTIONS,
   LOCALES,
   LOCALE_LABELS,
   draftFromFiles,
   fileNameFromDate,
+  leadImage,
   newDraft,
   postPath,
   toLocalInput,
@@ -24,6 +32,7 @@ import {
   serialize,
   slugify,
   splitFrontMatter,
+  withLeadImage,
   type Collection,
   type Draft,
   type Locale,
@@ -65,6 +74,120 @@ function loadDraft(): Draft | null {
     if (saved) return JSON.parse(saved) as Draft;
   } catch {}
   return null;
+}
+
+function Modal({
+  onClose,
+  children,
+}: {
+  onClose?: () => void;
+  children: ReactNode;
+}) {
+  return createPortal(
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
+        {children}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+function Thumbnail({
+  draft,
+  onPick,
+  onSet,
+}: {
+  draft: Draft;
+  onPick: (file: File) => void;
+  onSet: (url: string) => void;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [over, setOver] = useState(false);
+  const url = draft.thumbnail || "";
+  const pending = draft.images.find((image) => image.url === url);
+  const lead = leadImage(draft.locales.en.body);
+  const pick = (files: FileList | null) => {
+    const file = Array.from(files ?? []).find((f) =>
+      f.type.startsWith("image/"),
+    );
+    if (file) onPick(file);
+  };
+
+  return (
+    <section
+      className={clsx(styles.thumbnail, over && styles.thumbnailOver)}
+      onDragOver={(e) => {
+        if (!e.dataTransfer.types.includes("Files")) return;
+        e.preventDefault();
+        setOver(true);
+      }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setOver(false);
+        pick(e.dataTransfer.files);
+      }}
+    >
+      <button
+        className={clsx("clean-btn", styles.thumbnailImage)}
+        title="썸네일 고르기"
+        onClick={() => input.current?.click()}
+      >
+        {url ? (
+          <img src={pending ? dataUrl(pending) : url} alt="" />
+        ) : (
+          <span>+</span>
+        )}
+      </button>
+      <div className={styles.thumbnailInfo}>
+        <b>썸네일</b>
+        <span className={styles.muted}>
+          {url ? (
+            <>
+              <code>{url}</code> · 목록 카드에는 왼쪽 그림처럼 잘려 보입니다.
+            </>
+          ) : (
+            "블로그 목록 카드와 링크 미리보기에 쓰입니다. 고르면 본문 맨 위에도 들어갑니다."
+          )}
+        </span>
+        <div className={styles.row}>
+          <button
+            className="button button--sm button--secondary"
+            onClick={() => input.current?.click()}
+          >
+            {url ? "바꾸기" : "이미지 고르기"}
+          </button>
+          {!url && lead && (
+            <button
+              className="button button--sm button--secondary"
+              onClick={() => onSet(lead)}
+            >
+              본문 맨 위 이미지 쓰기
+            </button>
+          )}
+          {url && (
+            <button
+              className="button button--sm button--secondary"
+              onClick={() => onSet("")}
+            >
+              빼기
+            </button>
+          )}
+        </div>
+      </div>
+      <input
+        ref={input}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          pick(e.target.files);
+          e.target.value = "";
+        }}
+      />
+    </section>
+  );
 }
 
 function TokenSetup({
@@ -188,36 +311,34 @@ function PostList({
   }, [github]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.dialogHead}>
-          <h2>기존 글 불러오기</h2>
-          <button className="clean-btn" onClick={onClose}>
-            ✕
-          </button>
-        </div>
-        {error && <p className={styles.errorText}>{error}</p>}
-        {!items && !error && <p>불러오는 중…</p>}
-        {items && (
-          <ul className={styles.postList}>
-            {items.map((item) => (
-              <li key={`${item.collection}/${item.file}`}>
-                <button onClick={() => onOpen(item)}>
-                  <span className={styles.badge}>
-                    {COLLECTIONS[item.collection].label}
-                  </span>
-                  <span className={styles.postTitle}>{item.title}</span>
-                  <span className={styles.muted}>
-                    {item.file}
-                    {item.ko ? " · 한/영" : " · 영어만"}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+    <Modal onClose={onClose}>
+      <div className={styles.dialogHead}>
+        <h2>기존 글 불러오기</h2>
+        <button className="clean-btn" onClick={onClose}>
+          ✕
+        </button>
       </div>
-    </div>
+      {error && <p className={styles.errorText}>{error}</p>}
+      {!items && !error && <p>불러오는 중…</p>}
+      {items && (
+        <ul className={styles.postList}>
+          {items.map((item) => (
+            <li key={`${item.collection}/${item.file}`}>
+              <button onClick={() => onOpen(item)}>
+                <span className={styles.badge}>
+                  {COLLECTIONS[item.collection].label}
+                </span>
+                <span className={styles.postTitle}>{item.title}</span>
+                <span className={styles.muted}>
+                  {item.file}
+                  {item.ko ? " · 한/영" : " · 영어만"}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Modal>
   );
 }
 
@@ -241,68 +362,66 @@ function PublishDialog({
   ];
 
   return (
-    <div className={styles.overlay} onClick={busy ? undefined : onClose}>
-      <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.dialogHead}>
-          <h2>{draft.isNew ? "글 게시하기" : "수정 내용 게시하기"}</h2>
-          <button className="clean-btn" onClick={onClose} disabled={busy}>
-            ✕
-          </button>
-        </div>
-        <label className={styles.choice}>
-          <input
-            type="radio"
-            checked={mode === "direct"}
-            onChange={() => setMode("direct")}
-          />
-          <span>
-            <b>바로 게시</b>
-            <br />
-            <span className={styles.muted}>
-              {BRANCH} 브랜치에 커밋하고, 2~3분 뒤 사이트에 반영됩니다.
-            </span>
-          </span>
-        </label>
-        <label className={styles.choice}>
-          <input
-            type="radio"
-            checked={mode === "pr"}
-            onChange={() => setMode("pr")}
-          />
-          <span>
-            <b>PR로 올리기</b>
-            <br />
-            <span className={styles.muted}>
-              새 브랜치에 커밋하고 Pull Request를 엽니다. 머지하면 게시됩니다.
-            </span>
-          </span>
-        </label>
-        <p className={styles.muted}>커밋할 파일</p>
-        <ul className={styles.fileList}>
-          {files.map((file) => (
-            <li key={file}>
-              <code>{file}</code>
-            </li>
-          ))}
-        </ul>
-        <div className={styles.dialogActions}>
-          <button
-            className="button button--secondary"
-            onClick={onClose}
-            disabled={busy}
-          >
-            취소
-          </button>
-          <button
-            className="button button--primary"
-            onClick={() => onPublish(mode)}
-            disabled={busy}
-          >
-            {busy ? "게시 중…" : "게시"}
-          </button>
-        </div>
+    <Modal onClose={busy ? undefined : onClose}>
+      <div className={styles.dialogHead}>
+        <h2>{draft.isNew ? "글 게시하기" : "수정 내용 게시하기"}</h2>
+        <button className="clean-btn" onClick={onClose} disabled={busy}>
+          ✕
+        </button>
       </div>
-    </div>
+      <label className={styles.choice}>
+        <input
+          type="radio"
+          checked={mode === "direct"}
+          onChange={() => setMode("direct")}
+        />
+        <span>
+          <b>바로 게시</b>
+          <br />
+          <span className={styles.muted}>
+            {BRANCH} 브랜치에 커밋하고, 2~3분 뒤 사이트에 반영됩니다.
+          </span>
+        </span>
+      </label>
+      <label className={styles.choice}>
+        <input
+          type="radio"
+          checked={mode === "pr"}
+          onChange={() => setMode("pr")}
+        />
+        <span>
+          <b>PR로 올리기</b>
+          <br />
+          <span className={styles.muted}>
+            새 브랜치에 커밋하고 Pull Request를 엽니다. 머지하면 게시됩니다.
+          </span>
+        </span>
+      </label>
+      <p className={styles.muted}>커밋할 파일</p>
+      <ul className={styles.fileList}>
+        {files.map((file) => (
+          <li key={file}>
+            <code>{file}</code>
+          </li>
+        ))}
+      </ul>
+      <div className={styles.dialogActions}>
+        <button
+          className="button button--secondary"
+          onClick={onClose}
+          disabled={busy}
+        >
+          취소
+        </button>
+        <button
+          className="button button--primary"
+          onClick={() => onPublish(mode)}
+          disabled={busy}
+        >
+          {busy ? "게시 중…" : "게시"}
+        </button>
+      </div>
+    </Modal>
   );
 }
 
@@ -322,71 +441,69 @@ function SaveDialog({
   const zip = files.length > 1;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.dialogHead}>
-          <h2>파일로 저장</h2>
-          <button className="clean-btn" onClick={onClose}>
-            ✕
-          </button>
-        </div>
-        <label className={styles.choice}>
-          <input
-            type="radio"
-            checked={scope === "all"}
-            onChange={() => setScope("all")}
-          />
-          <span>
-            <b>글 전체</b>
-            <br />
-            <span className={styles.muted}>
-              영어·한국어 글과 아직 올리지 않은 이미지를 함께 저장합니다. 파일이
-              여러 개면 저장소 경로 그대로 .zip 하나에 담습니다.
-            </span>
-          </span>
-        </label>
-        <label className={styles.choice}>
-          <input
-            type="radio"
-            checked={scope === "locale"}
-            disabled={!draft.locales[locale].enabled}
-            onChange={() => setScope("locale")}
-          />
-          <span>
-            <b>{LOCALE_LABELS[locale]} 글만</b>
-            <br />
-            <span className={styles.muted}>
-              지금 보고 있는 언어의 글 파일 하나만 저장합니다.
-              {draft.images.length > 0 && " 이미지는 빠집니다."}
-            </span>
-          </span>
-        </label>
-        <p className={styles.muted}>
-          {zip ? `${draft.fileName}.zip에 담길 파일` : "저장할 파일"}
-        </p>
-        <ul className={styles.fileList}>
-          {files.map((file) => (
-            <li key={file}>
-              <code>{file}</code>
-            </li>
-          ))}
-        </ul>
-        <div className={styles.dialogActions}>
-          <button className="button button--secondary" onClick={onClose}>
-            취소
-          </button>
-          <button
-            className="button button--primary"
-            onClick={() => {
-              saveDraft(draft, locale, scope);
-              onSaved();
-            }}
-          >
-            저장
-          </button>
-        </div>
+    <Modal onClose={onClose}>
+      <div className={styles.dialogHead}>
+        <h2>파일로 저장</h2>
+        <button className="clean-btn" onClick={onClose}>
+          ✕
+        </button>
       </div>
-    </div>
+      <label className={styles.choice}>
+        <input
+          type="radio"
+          checked={scope === "all"}
+          onChange={() => setScope("all")}
+        />
+        <span>
+          <b>글 전체</b>
+          <br />
+          <span className={styles.muted}>
+            영어·한국어 글과 아직 올리지 않은 이미지를 함께 저장합니다. 파일이
+            여러 개면 저장소 경로 그대로 .zip 하나에 담습니다.
+          </span>
+        </span>
+      </label>
+      <label className={styles.choice}>
+        <input
+          type="radio"
+          checked={scope === "locale"}
+          disabled={!draft.locales[locale].enabled}
+          onChange={() => setScope("locale")}
+        />
+        <span>
+          <b>{LOCALE_LABELS[locale]} 글만</b>
+          <br />
+          <span className={styles.muted}>
+            지금 보고 있는 언어의 글 파일 하나만 저장합니다.
+            {draft.images.length > 0 && " 이미지는 빠집니다."}
+          </span>
+        </span>
+      </label>
+      <p className={styles.muted}>
+        {zip ? `${draft.fileName}.zip에 담길 파일` : "저장할 파일"}
+      </p>
+      <ul className={styles.fileList}>
+        {files.map((file) => (
+          <li key={file}>
+            <code>{file}</code>
+          </li>
+        ))}
+      </ul>
+      <div className={styles.dialogActions}>
+        <button className="button button--secondary" onClick={onClose}>
+          취소
+        </button>
+        <button
+          className="button button--primary"
+          onClick={() => {
+            saveDraft(draft, locale, scope);
+            onSaved();
+          }}
+        >
+          저장
+        </button>
+      </div>
+    </Modal>
   );
 }
 
@@ -547,9 +664,46 @@ export default function Writer() {
     return added.map((image) => image.url);
   };
 
+  const setThumbnail = (url: string) =>
+    setDraft((d) => {
+      const previous = d.thumbnail || "";
+      const locales = { ...d.locales };
+      for (const l of LOCALES) {
+        if (!locales[l].enabled) continue;
+        locales[l] = {
+          ...locales[l],
+          body: withLeadImage(locales[l].body, url, previous),
+        };
+      }
+      const dropped =
+        previous !== url &&
+        !LOCALES.some((l) => locales[l].body.includes(`(${previous})`));
+      return {
+        ...d,
+        thumbnail: url,
+        locales,
+        images: dropped
+          ? d.images.filter((image) => image.url !== previous)
+          : d.images,
+      };
+    });
+
+  const pickThumbnail = async (file: File) => {
+    try {
+      const [url] = await addImages([file]);
+      setThumbnail(url);
+    } catch (e) {
+      setNotice({
+        kind: "error",
+        text: `이미지를 읽지 못했습니다: ${(e as Error).message}`,
+      });
+    }
+  };
+
   const removeImage = (url: string) =>
     setDraft((d) => ({
       ...d,
+      thumbnail: d.thumbnail === url ? "" : d.thumbnail,
       images: d.images.filter((image) => image.url !== url),
     }));
 
@@ -844,6 +998,14 @@ export default function Writer() {
           목차 숨기기
         </label>
       </section>
+
+      {draft.collection === "blog" && (
+        <Thumbnail
+          draft={draft}
+          onPick={(file) => void pickThumbnail(file)}
+          onSet={setThumbnail}
+        />
+      )}
 
       <div className={styles.tabs}>
         {LOCALES.map((l) => (

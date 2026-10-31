@@ -70,6 +70,7 @@ export type Draft = {
   slug: string;
   hideToc: boolean;
   showAuthor: boolean;
+  thumbnail: string;
   locales: Record<Locale, LocaleDraft>;
   images: PendingImage[];
 };
@@ -118,6 +119,7 @@ export function newDraft(collection: Collection): Draft {
     slug: "",
     hideToc: collection === "announcements",
     showAuthor: collection === "blog",
+    thumbnail: "",
     locales: {
       en: { ...emptyLocale(true), body: "\n\n{/* truncate */}\n\n" },
       ko: { ...emptyLocale(true), body: "\n\n{/* truncate */}\n\n" },
@@ -168,6 +170,7 @@ export function draftFromFiles(
     slug: "",
     hideToc: false,
     showAuthor: false,
+    thumbnail: "",
     locales: { en: emptyLocale(false), ko: emptyLocale(false) },
     images: [],
   };
@@ -177,6 +180,7 @@ export function draftFromFiles(
     const { data, body } = splitFrontMatter(source);
     const extra: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
+      if (collection === "blog" && key === "image") continue;
       if (!KNOWN_KEYS.includes(key) || key === "authors") extra[key] = value;
     }
     draft.locales[locale] = {
@@ -194,6 +198,8 @@ export function draftFromFiles(
       }
       draft.hideToc = data.hide_table_of_contents === true;
       draft.showAuthor = Boolean(data.authors);
+      if (collection === "blog" && typeof data.image === "string")
+        draft.thumbnail = data.image;
     }
   }
   return draft;
@@ -207,8 +213,26 @@ export function serialize(draft: Draft, locale: Locale) {
   if (draft.slug) data.slug = draft.slug;
   if (draft.date) data.date = withOffset(draft.date);
   if (draft.showAuthor) data.authors = authors ?? DEFAULT_AUTHORS[locale];
+  if (draft.collection === "blog" && draft.thumbnail)
+    data.image = draft.thumbnail;
   data.hide_table_of_contents = draft.hideToc;
   Object.assign(data, rest);
   const yaml = stringify(data, { lineWidth: 0 });
   return `---\n${yaml}---\n\n${loc.body.trim()}\n`;
+}
+
+const LEAD_IMAGE = /^!\[[^\]]*\]\(([^)\s]+)\)[ \t]*(?:\r?\n)*/;
+
+export function leadImage(body: string) {
+  return body.trimStart().match(LEAD_IMAGE)?.[1] ?? null;
+}
+
+export function withLeadImage(body: string, url: string, previous: string) {
+  const trimmed = body.trimStart();
+  const match = trimmed.match(LEAD_IMAGE);
+  const rest =
+    match && (url || match[1] === previous)
+      ? trimmed.slice(match[0].length)
+      : trimmed;
+  return url ? `![](${url})\n\n${rest}` : rest;
 }
