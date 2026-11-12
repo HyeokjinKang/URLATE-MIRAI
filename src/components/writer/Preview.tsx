@@ -52,16 +52,25 @@ export default function Preview({
   description,
   body,
   images,
+  held = false,
+  onRelease,
 }: {
   title: string;
   description: string;
   body: string;
   images: PendingImage[];
+  held?: boolean;
+  onRelease?: () => void;
 }) {
   const [content, setContent] = useState<{ Content: Content; key: number }>();
   const [error, setError] = useState<CompileError | null>(null);
 
   useEffect(() => {
+    if (held) {
+      setContent(undefined);
+      setError(null);
+      return;
+    }
     let cancelled = false;
     const timer = setTimeout(async () => {
       try {
@@ -81,7 +90,7 @@ export default function Preview({
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [body]);
+  }, [body, held]);
 
   const components = useMemo(() => {
     const map = new Map(images.map((image) => [image.url, dataUrl(image)]));
@@ -101,6 +110,22 @@ export default function Preview({
         <div className={styles.compileError}>
           <strong>MDX 오류{error.line ? ` (${error.line}번째 줄)` : ""}</strong>
           <span>{error.message}</span>
+        </div>
+      )}
+      {held && (
+        <div className={styles.previewHold}>
+          <strong>가져온 파일의 미리 보기를 멈췄습니다</strong>
+          <span>
+            미리 보기는 본문의 MDX 코드를 이 페이지에서 실행합니다. 직접 쓰지
+            않은 파일이라면 본문을 먼저 읽어 보고 켜 주세요.
+          </span>
+          <button
+            type="button"
+            className="button button--sm button--secondary"
+            onClick={onRelease}
+          >
+            미리 보기 켜기
+          </button>
         </div>
       )}
       <article className="markdown">
