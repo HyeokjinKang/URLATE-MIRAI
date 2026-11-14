@@ -43,6 +43,7 @@ import styles from "./styles.module.css";
 
 const TOKEN_KEY = "mirai-writer-token";
 const DRAFT_KEY = "mirai-writer-draft";
+const PREVIEW_HOLD_KEY = "mirai-writer-preview-hold";
 const SITE = "https://mirai.urlate.coupy.dev";
 
 type User = { login: string; avatar_url: string };
@@ -526,6 +527,13 @@ export default function Writer() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [previewHeld, setPreviewHeld] = useState(
+    () => storage(PREVIEW_HOLD_KEY) === "1",
+  );
+  const holdPreview = (held: boolean) => {
+    storage(PREVIEW_HOLD_KEY, held ? "1" : null);
+    setPreviewHeld(held);
+  };
 
   const github = useMemo(() => (token ? new GitHub(token) : null), [token]);
   const dirty = JSON.stringify(draft) !== baseline;
@@ -584,6 +592,7 @@ export default function Writer() {
   const startNew = (collection: Collection) => {
     if (!confirmDiscard()) return;
     const next = newDraft(collection);
+    holdPreview(false);
     setDraft(next);
     setBaseline(JSON.stringify(next));
     setLocale("en");
@@ -601,6 +610,7 @@ export default function Writer() {
         ),
       );
       const next = draftFromFiles(item.collection, item.file, { en, ko });
+      holdPreview(false);
       setDraft(next);
       setBaseline(JSON.stringify(next));
       setLocale("en");
@@ -634,6 +644,7 @@ export default function Writer() {
       }
       const next = draftFromLoaded(loaded, collection ?? "blog", isNew);
       if (!next.date && isNew) next.date = toLocalInput(new Date());
+      holdPreview(true);
       setDraft(next);
       setBaseline(JSON.stringify(next));
       setLocale(next.locales.en.enabled ? "en" : "ko");
@@ -1096,6 +1107,8 @@ export default function Writer() {
                 description={current.description}
                 body={current.body}
                 images={draft.images}
+                held={previewHeld}
+                onRelease={() => holdPreview(false)}
               />
             )}
           </div>
