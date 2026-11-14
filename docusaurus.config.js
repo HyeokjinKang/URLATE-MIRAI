@@ -88,7 +88,6 @@ module.exports = async function createConfig() {
           },
           theme: {
             customCss: [
-              // relative paths are relative to site dir
               require.resolve("./src/css/custom.css"),
               require.resolve("katex/dist/katex.min.css"),
             ],
