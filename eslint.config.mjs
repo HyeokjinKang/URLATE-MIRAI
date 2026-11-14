@@ -12,7 +12,7 @@ export default [
       "i18n/**/*.json",
     ],
   },
-  // Docusaurus config files: CommonJS running in Node.
+  // Docusaurus config files
   {
     ...js.configs.recommended,
     files: ["**/*.js", "**/*.mjs"],
@@ -26,14 +26,14 @@ export default [
     files: ["**/*.mjs"],
     languageOptions: { sourceType: "module" },
   },
-  // Blog posts, announcements and docs.
+  // Blog posts, announcements and docs
   {
     ...mdx.flat,
     processor: mdx.createRemarkProcessor({
       lintCodeBlocks: true,
     }),
   },
-  // Code blocks embedded in those Markdown files.
+  // Markdown code blocks
   {
     ...mdx.flatCodeBlocks,
     rules: {
