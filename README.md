@@ -2,7 +2,7 @@
 
 This website is built using [Docusaurus 3](https://docusaurus.io/), a modern static website generator.
 
-Requires Node.js 20 or newer.
+Requires Node.js 24 or newer.
 
 ### Installation
 
@@ -46,16 +46,4 @@ $ npm run serve
 
 ### Deployment
 
-Using SSH:
-
-```
-$ USE_SSH=true npm run deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> npm run deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Pushing to `main` runs `.github/workflows/deploy.yml`, which builds the site and publishes it to GitHub Pages. The workflow can also be started by hand from the Actions tab.
