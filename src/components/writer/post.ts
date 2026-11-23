@@ -71,6 +71,7 @@ export type Draft = {
   hideToc: boolean;
   showAuthor: boolean;
   thumbnail: string;
+  category: string;
   locales: Record<Locale, LocaleDraft>;
   images: PendingImage[];
 };
@@ -120,6 +121,7 @@ export function newDraft(collection: Collection): Draft {
     hideToc: collection === "announcements",
     showAuthor: collection === "blog",
     thumbnail: "",
+    category: "",
     locales: {
       en: { ...emptyLocale(true), body: "\n\n{/* truncate */}\n\n" },
       ko: { ...emptyLocale(true), body: "\n\n{/* truncate */}\n\n" },
@@ -171,6 +173,7 @@ export function draftFromFiles(
     hideToc: false,
     showAuthor: false,
     thumbnail: "",
+    category: "",
     locales: { en: emptyLocale(false), ko: emptyLocale(false) },
     images: [],
   };
@@ -180,7 +183,8 @@ export function draftFromFiles(
     const { data, body } = splitFrontMatter(source);
     const extra: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
-      if (collection === "blog" && key === "image") continue;
+      if (collection === "blog" && (key === "image" || key === "tags"))
+        continue;
       if (!KNOWN_KEYS.includes(key) || key === "authors") extra[key] = value;
     }
     draft.locales[locale] = {
@@ -200,6 +204,8 @@ export function draftFromFiles(
       draft.showAuthor = Boolean(data.authors);
       if (collection === "blog" && typeof data.image === "string")
         draft.thumbnail = data.image;
+      if (collection === "blog" && Array.isArray(data.tags) && data.tags[0])
+        draft.category = String(data.tags[0]);
     }
   }
   return draft;
@@ -215,6 +221,8 @@ export function serialize(draft: Draft, locale: Locale) {
   if (draft.showAuthor) data.authors = authors ?? DEFAULT_AUTHORS[locale];
   if (draft.collection === "blog" && draft.thumbnail)
     data.image = draft.thumbnail;
+  if (draft.collection === "blog" && draft.category)
+    data.tags = [draft.category];
   data.hide_table_of_contents = draft.hideToc;
   Object.assign(data, rest);
   const yaml = stringify(data, { lineWidth: 0 });

@@ -1,0 +1,31 @@
+.footer {
+  margin-top: 3rem;
+}
+
+.more {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--mirai-border);
+  border-radius: 14px;
+  color: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.more:hover {
+  border-color: var(--ifm-color-primary);
+  color: inherit;
+  text-decoration: none;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--mirai-muted);
+}
+
+.name {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}

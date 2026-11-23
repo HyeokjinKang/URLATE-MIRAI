@@ -82,6 +82,8 @@ module.exports = async function createConfig() {
             blogDescription: "Stories from the making of URLATE",
             blogSidebarCount: 0,
             postsPerPage: 13,
+            tagsBasePath: "categories",
+            onInlineTags: "throw",
             onInlineAuthors: "ignore",
             onUntruncatedBlogPosts: "ignore",
             ...markdownPlugins,
@@ -96,6 +98,7 @@ module.exports = async function createConfig() {
       ],
     ],
     plugins: [
+      "./plugins/blog-categories.js",
       () => ({
         name: "esm-only-aliases",
         configureWebpack: () => ({
