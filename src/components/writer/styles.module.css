@@ -1,3 +1,12 @@
+/* ---- Fonts ------------------------------------------------------------- */
+
+@font-face {
+  font-family: "CloudSansCode";
+  src: url("/fonts/goorm-sans-code.woff2") format("woff2");
+  font-weight: normal;
+  font-display: swap;
+}
+
 /* ---- Layout ------------------------------------------------------------ */
 
 .writer {
@@ -245,7 +254,7 @@
   resize: vertical;
   background: var(--ifm-background-color);
   color: var(--ifm-font-color-base);
-  font-family: var(--ifm-font-family-monospace);
+  font-family: "CloudSansCode", var(--ifm-font-family-monospace);
   font-size: 0.92rem;
   line-height: 1.7;
   tab-size: 2;
