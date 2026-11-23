@@ -39,6 +39,8 @@ import {
   type LocaleDraft,
   type PendingImage,
 } from "./post";
+import { useBlogCategories } from "../blog/categories";
+
 import styles from "./styles.module.css";
 
 const TOKEN_KEY = "mirai-writer-token";
@@ -72,7 +74,9 @@ function storage(key: string, value?: string | null) {
 function loadDraft(): Draft | null {
   try {
     const saved = storage(DRAFT_KEY);
-    if (saved) return JSON.parse(saved) as Draft;
+    if (!saved) return null;
+    const draft = JSON.parse(saved) as Draft;
+    return { ...draft, category: draft.category ?? "" };
   } catch {}
   return null;
 }
@@ -578,6 +582,8 @@ export default function Writer() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [draft.images.length, dirty]);
 
+  const categories = useBlogCategories()?.categories ?? [];
+
   const update = (patch: Partial<Draft>) =>
     setDraft((d) => ({ ...d, ...patch }));
   const updateLocale = (patch: Partial<LocaleDraft>, target: Locale = locale) =>
@@ -719,6 +725,13 @@ export default function Writer() {
     }));
 
   const validate = async (): Promise<string | null> => {
+    if (draft.collection === "blog" && !draft.category)
+      return "블로그 글은 카테고리를 골라 주세요.";
+    if (
+      draft.collection === "blog" &&
+      !categories.some((c) => c.key === draft.category)
+    )
+      return `${draft.category} 카테고리가 없습니다. blog/tags.yml에 있는 카테고리를 골라 주세요.`;
     if (!/^[A-Za-z0-9_-]+$/.test(draft.fileName))
       return "파일 이름은 영문, 숫자, -, _ 만 쓸 수 있습니다.";
     if (!draft.locales.en.enabled)
@@ -992,6 +1005,29 @@ export default function Writer() {
             onChange={(e) => update({ slug: e.target.value.trim() })}
           />
         </label>
+        {draft.collection === "blog" && (
+          <label>
+            카테고리
+            <select
+              className={styles.input}
+              value={draft.category}
+              onChange={(e) => update({ category: e.target.value })}
+            >
+              <option value="" disabled>
+                골라 주세요
+              </option>
+              {categories.map((c) => (
+                <option key={c.key} value={c.key}>
+                  {c.label}
+                </option>
+              ))}
+              {draft.category &&
+                !categories.some((c) => c.key === draft.category) && (
+                  <option value={draft.category}>{draft.category}</option>
+                )}
+            </select>
+          </label>
+        )}
         <label className={styles.check}>
           <input
             type="checkbox"
