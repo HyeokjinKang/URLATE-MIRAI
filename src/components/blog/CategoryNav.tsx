@@ -57,9 +57,6 @@ export default function CategoryNav({
           );
         })}
       </ul>
-      {current?.description && (
-        <p className={styles.description}>{current.description}</p>
-      )}
     </nav>
   );
 }

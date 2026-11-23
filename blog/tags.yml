@@ -5,8 +5,8 @@ news:
 releases:
   label: Releases
   permalink: /releases
-  description: Launches, early access and new versions of URLATE.
+  description: Launches, early access and development progress of URLATE.
 devlog:
   label: Devlog
   permalink: /devlog
-  description: Where development stands and what comes next.
+  description: Notes from building URLATE.

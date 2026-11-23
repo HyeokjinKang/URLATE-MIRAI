@@ -188,7 +188,7 @@ export function BlogIndex({
             <Posts
               items={items}
               page={metadata.page}
-              showCategory={hasCategories && !category}
+              showCategory={hasCategories}
             />
             <BlogListPaginator metadata={metadata} />
           </>

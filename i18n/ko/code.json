@@ -271,7 +271,7 @@
     "description": "The title of the tag list page"
   },
   "mirai.blog.categories.all": {
-    "message": "전체",
+    "message": "All",
     "description": "The category tab that lists every blog post"
   },
   "mirai.blog.categories.navLabel": {
