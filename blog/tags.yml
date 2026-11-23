@@ -1,12 +1,12 @@
 news:
   label: News
   permalink: /news
-  description: Launches, returns and other big moments for URLATE.
+  description: Updates and stories about URLATE and MIRAI.
+releases:
+  label: Releases
+  permalink: /releases
+  description: Launches, early access and new versions of URLATE.
 devlog:
-  label: Dev Updates
+  label: Devlog
   permalink: /devlog
   description: Where development stands and what comes next.
-story:
-  label: Stories
-  permalink: /story
-  description: The thinking behind URLATE and MIRAI.
