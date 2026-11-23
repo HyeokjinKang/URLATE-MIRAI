@@ -217,14 +217,12 @@
 }
 
 .category {
-  font-weight: 700;
   color: var(--ifm-color-primary);
 }
 
 .category::after {
   content: "·";
   margin-left: 0.5rem;
-  font-weight: 400;
   color: var(--mirai-muted);
 }
 
