@@ -7,3 +7,20 @@
     font-size: 2rem;
   }
 }
+
+.category {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.875rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  background: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+}
+
+.category:hover {
+  color: var(--ifm-background-color);
+  background: var(--ifm-color-primary);
+  text-decoration: none;
+}

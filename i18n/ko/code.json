@@ -269,5 +269,29 @@
   "theme.tags.tagsPageTitle": {
     "message": "태그",
     "description": "The title of the tag list page"
+  },
+  "mirai.blog.categories.all": {
+    "message": "전체",
+    "description": "The category tab that lists every blog post"
+  },
+  "mirai.blog.categories.navLabel": {
+    "message": "블로그 카테고리",
+    "description": "The ARIA label of the blog category tabs"
+  },
+  "mirai.blog.categories.title": {
+    "message": "카테고리",
+    "description": "The title of the blog category list page"
+  },
+  "mirai.blog.categories.postCount": {
+    "message": "글 {count}개",
+    "description": "The number of posts in a blog category"
+  },
+  "mirai.blog.categories.morePrefix": {
+    "message": "이 카테고리의 다른 글",
+    "description": "The small label above the category link under a post"
+  },
+  "mirai.blog.categories.more": {
+    "message": "{category} 글 모두 보기 →",
+    "description": "The link under a post to its category page"
   }
 }

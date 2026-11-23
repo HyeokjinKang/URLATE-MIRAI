@@ -1,0 +1,12 @@
+news:
+  label: News
+  permalink: /news
+  description: Launches, returns and other big moments for URLATE.
+devlog:
+  label: Dev Updates
+  permalink: /devlog
+  description: Where development stands and what comes next.
+story:
+  label: Stories
+  permalink: /story
+  description: The thinking behind URLATE and MIRAI.

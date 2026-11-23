@@ -16,5 +16,5 @@
     "noEmit": true,
     "types": ["node", "@docusaurus/module-type-aliases"]
   },
-  "include": ["docusaurus.config.js", "sidebars.js", "src/**/*"]
+  "include": ["docusaurus.config.js", "sidebars.js", "plugins/**/*", "src/**/*"]
 }

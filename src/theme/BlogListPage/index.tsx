@@ -13,7 +13,11 @@ import Layout from "@theme/Layout";
 import BlogListPaginator from "@theme/BlogListPaginator";
 import SearchMetadata from "@theme/SearchMetadata";
 import BlogListPageStructuredData from "@theme/BlogListPage/StructuredData";
+import useRouteContext from "@docusaurus/useRouteContext";
 import type { Props } from "@theme/BlogListPage";
+import type { BlogPaginatedMetadata } from "@docusaurus/plugin-content-blog";
+import CategoryNav from "../../components/blog/CategoryNav";
+import { useCategoryOf } from "../../components/blog/categories";
 import { stripTitleDate } from "../../utils/postTitle";
 
 import styles from "./styles.module.css";
@@ -43,18 +47,49 @@ function Cover({ src, title }: { src?: string; title: string }) {
   );
 }
 
-function Card({ item, featured }: { item: Item; featured?: boolean }) {
-  const { metadata, frontMatter, assets } = item.content;
+function PostMeta({
+  item,
+  showCategory,
+}: {
+  item: Item;
+  showCategory: boolean;
+}) {
+  const { metadata } = item.content;
   const formatDate = usePostDate();
+  const category = useCategoryOf(metadata.tags.map((tag) => tag.permalink));
+  return (
+    <span className={styles.meta}>
+      {showCategory && category && (
+        <span className={styles.category}>{category.label}</span>
+      )}
+      <time dateTime={metadata.date}>{formatDate(metadata.date)}</time>
+    </span>
+  );
+}
+
+type ListProps = {
+  items: readonly Item[];
+  page: number;
+  showCategory: boolean;
+};
+
+function Card({
+  item,
+  featured,
+  showCategory,
+}: {
+  item: Item;
+  featured?: boolean;
+  showCategory: boolean;
+}) {
+  const { metadata, frontMatter, assets } = item.content;
   const author = metadata.authors[0];
   return (
     <article className={clsx(styles.card, featured && styles.featured)}>
       <Link to={metadata.permalink} className={styles.cardLink}>
         <Cover src={assets.image ?? frontMatter.image} title={metadata.title} />
         <div className={styles.cardBody}>
-          <time dateTime={metadata.date} className={styles.meta}>
-            {formatDate(metadata.date)}
-          </time>
+          <PostMeta item={item} showCategory={showCategory} />
           <h2 className={styles.cardTitle}>{metadata.title}</h2>
           {metadata.description && (
             <p className={styles.excerpt}>{metadata.description}</p>
@@ -71,15 +106,12 @@ function Card({ item, featured }: { item: Item; featured?: boolean }) {
   );
 }
 
-function Row({ item }: { item: Item }) {
+function Row({ item, showCategory }: { item: Item; showCategory: boolean }) {
   const { metadata } = item.content;
-  const formatDate = usePostDate();
   return (
     <li>
       <Link to={metadata.permalink} className={styles.row}>
-        <time dateTime={metadata.date} className={styles.meta}>
-          {formatDate(metadata.date)}
-        </time>
+        <PostMeta item={item} showCategory={showCategory} />
         <span className={styles.rowTitle}>
           {stripTitleDate(metadata.title)}
         </span>
@@ -88,7 +120,7 @@ function Row({ item }: { item: Item }) {
   );
 }
 
-function Posts({ metadata, items }: Props) {
+function Posts({ items, page, showCategory }: ListProps) {
   const hasCovers = items.some(
     (item) => item.content.assets.image ?? item.content.frontMatter.image,
   );
@@ -96,27 +128,78 @@ function Posts({ metadata, items }: Props) {
     return (
       <ul className={styles.rows}>
         {items.map((item) => (
-          <Row key={item.content.metadata.permalink} item={item} />
+          <Row
+            key={item.content.metadata.permalink}
+            item={item}
+            showCategory={showCategory}
+          />
         ))}
       </ul>
     );
   }
-  const [first, ...rest] = metadata.page === 1 ? items : [undefined, ...items];
+  const [first, ...rest] = page === 1 ? items : [undefined, ...items];
   return (
     <>
-      {first && <Card item={first} featured />}
+      {first && <Card item={first} featured showCategory={showCategory} />}
       <div className={styles.grid}>
         {rest.map(
           (item) =>
-            item && <Card key={item.content.metadata.permalink} item={item} />,
+            item && (
+              <Card
+                key={item.content.metadata.permalink}
+                item={item}
+                showCategory={showCategory}
+              />
+            ),
         )}
       </div>
     </>
   );
 }
 
+export function BlogIndex({
+  title,
+  description,
+  metadata,
+  items = [],
+  category,
+  children,
+}: {
+  title: string;
+  description: string;
+  metadata?: BlogPaginatedMetadata;
+  items?: readonly Item[];
+  category?: string | null;
+  children?: ReactNode;
+}): ReactNode {
+  const { plugin } = useRouteContext();
+  const hasCategories = plugin.id === "default";
+  return (
+    <Layout>
+      <main className={styles.page}>
+        <header className={styles.hero}>
+          <h1>{title}</h1>
+          <p>{description}</p>
+        </header>
+        {hasCategories && <CategoryNav active={category} />}
+        {children}
+        {metadata && (
+          <>
+            <Posts
+              items={items}
+              page={metadata.page}
+              showCategory={hasCategories && !category}
+            />
+            <BlogListPaginator metadata={metadata} />
+          </>
+        )}
+      </main>
+    </Layout>
+  );
+}
+
 export default function BlogListPage(props: Props): ReactNode {
-  const { metadata } = props;
+  const { metadata, items } = props;
   const {
     siteConfig: { title: siteTitle },
   } = useDocusaurusContext();
@@ -134,16 +217,12 @@ export default function BlogListPage(props: Props): ReactNode {
       />
       <SearchMetadata tag="blog_posts_list" />
       <BlogListPageStructuredData {...props} />
-      <Layout>
-        <main className={styles.page}>
-          <header className={styles.hero}>
-            <h1>{blogTitle}</h1>
-            <p>{blogDescription}</p>
-          </header>
-          <Posts {...props} />
-          <BlogListPaginator metadata={metadata} />
-        </main>
-      </Layout>
+      <BlogIndex
+        title={blogTitle}
+        description={blogDescription}
+        metadata={metadata}
+        items={items}
+      />
     </HtmlClassNameProvider>
   );
 }
