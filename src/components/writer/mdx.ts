@@ -5,6 +5,7 @@ import { valueToEstree } from "estree-util-value-to-estree";
 import type { Program } from "estree";
 import type { Heading, Root, RootContent, Text } from "mdast";
 import type { CompileOptions } from "@mdx-js/mdx";
+import remarkImageCaption from "../../../plugins/remark-image-caption";
 
 export const ADMONITIONS = [
   "secondary",
@@ -329,6 +330,7 @@ async function loadPlugins() {
   ]);
   return {
     remarkPlugins: [
+      remarkImageCaption,
       directive.default,
       remarkAdmonitions,
       remarkHeadings,
