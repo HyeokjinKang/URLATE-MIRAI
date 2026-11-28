@@ -2,6 +2,13 @@ import type { PendingImage } from "./post";
 
 const MAX_WIDTH = 1920;
 const KEEP_TYPES = ["image/gif", "image/svg+xml", "image/webp"];
+export const VIDEO_TYPES = ["video/mp4", "video/webm"];
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
+
+export const isVideo = (type: string) => VIDEO_TYPES.includes(type);
+export const isVideoUrl = (url: string) => /\.(mp4|webm)$/i.test(url);
+export const isMedia = (type: string) =>
+  type.startsWith("image/") || isVideo(type);
 
 function baseName(name: string) {
   const stem = name.replace(/\.[^.]+$/, "");
@@ -41,7 +48,9 @@ export async function prepareImage(
   folder: string,
   taken: string[],
 ): Promise<PendingImage> {
-  const keep = KEEP_TYPES.includes(file.type);
+  if (isVideo(file.type) && file.size > MAX_VIDEO_BYTES)
+    throw new Error(`${file.name}: 영상은 50MB까지 올릴 수 있습니다.`);
+  const keep = KEEP_TYPES.includes(file.type) || isVideo(file.type);
   const blob = keep ? file : await toWebp(file);
   const ext =
     blob === file ? (file.name.match(/\.([^.]+)$/)?.[1] ?? "png") : "webp";
@@ -60,4 +69,15 @@ export async function prepareImage(
 
 export function dataUrl(image: PendingImage) {
   return `data:${image.type};base64,${image.base64}`;
+}
+
+export function objectUrl(image: PendingImage) {
+  const binary = atob(image.base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes], { type: image.type }));
+}
+
+export function videoTag(url: string) {
+  return `<video src="${url}" autoPlay loop muted playsInline />`;
 }

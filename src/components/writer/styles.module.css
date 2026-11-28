@@ -336,7 +336,8 @@
   overflow: hidden;
 }
 
-.imageGrid img {
+.imageGrid img,
+.imageGrid video {
   display: block;
   width: 100%;
   height: 110px;

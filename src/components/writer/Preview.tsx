@@ -7,7 +7,7 @@ import React, {
   type ReactNode,
 } from "react";
 import MDXComponents from "@theme/MDXComponents";
-import { dataUrl } from "./image";
+import { dataUrl, isVideo, objectUrl } from "./image";
 import {
   checkMdx as compileCheck,
   evaluateMdx,
@@ -65,6 +65,21 @@ export default function Preview({
   const [content, setContent] = useState<{ Content: Content; key: number }>();
   const [error, setError] = useState<CompileError | null>(null);
 
+  const videoUrls = useMemo(
+    () =>
+      new Map(
+        images
+          .filter((image) => isVideo(image.type))
+          .map((image) => [image.url, objectUrl(image)]),
+      ),
+    [images],
+  );
+
+  useEffect(
+    () => () => videoUrls.forEach((url) => URL.revokeObjectURL(url)),
+    [videoUrls],
+  );
+
   useEffect(() => {
     if (held) {
       setContent(undefined);
@@ -74,7 +89,10 @@ export default function Preview({
     let cancelled = false;
     const timer = setTimeout(async () => {
       try {
-        const mod = await evaluateMdx(previewSource(body));
+        let source = body;
+        for (const [url, blob] of videoUrls)
+          source = source.split(`"${url}"`).join(`"${blob}"`);
+        const mod = await evaluateMdx(previewSource(source));
         if (cancelled) return;
         setContent((prev) => ({
           Content: mod.default as unknown as Content,
@@ -90,7 +108,7 @@ export default function Preview({
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [body, held]);
+  }, [body, held, videoUrls]);
 
   const components = useMemo(() => {
     const map = new Map(images.map((image) => [image.url, dataUrl(image)]));

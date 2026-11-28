@@ -27,6 +27,8 @@ const IMAGE_TYPES: Record<string, string> = {
   jpeg: "image/jpeg",
   gif: "image/gif",
   svg: "image/svg+xml",
+  mp4: "video/mp4",
+  webm: "video/webm",
 };
 
 const POST_PATTERN = /\.mdx?$/i;
