@@ -188,7 +188,15 @@ html[data-theme="dark"] .header-github-link:before {
   line-height: 1.8;
 }
 
-.blog-post-page .markdown img {
+.markdown video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto var(--ifm-paragraph-margin-bottom);
+}
+
+.blog-post-page .markdown img,
+.blog-post-page .markdown video {
   border-radius: 12px;
 }
 

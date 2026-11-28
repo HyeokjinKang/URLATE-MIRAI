@@ -17,7 +17,7 @@ import {
 } from "./files";
 import Preview, { checkMdx } from "./Preview";
 import { BRANCH, GitHub, OWNER, REPO } from "./github";
-import { dataUrl, prepareImage } from "./image";
+import { dataUrl, isVideo, objectUrl, prepareImage } from "./image";
 import {
   COLLECTIONS,
   LOCALES,
@@ -96,6 +96,16 @@ function Modal({
     </div>,
     document.body,
   );
+}
+
+function PendingVideo({ image }: { image: PendingImage }) {
+  const [src, setSrc] = useState<string>();
+  useEffect(() => {
+    const url = objectUrl(image);
+    setSrc(url);
+    return () => URL.revokeObjectURL(url);
+  }, [image]);
+  return <video src={src} muted loop autoPlay playsInline />;
 }
 
 function Thumbnail({
@@ -480,7 +490,7 @@ function SaveDialog({
           <br />
           <span className={styles.muted}>
             지금 보고 있는 언어의 글 파일 하나만 저장합니다.
-            {draft.images.length > 0 && " 이미지는 빠집니다."}
+            {draft.images.length > 0 && " 이미지·영상은 빠집니다."}
           </span>
         </span>
       </label>
@@ -673,9 +683,13 @@ export default function Writer() {
     const taken = draft.images.map((image) => image.url);
     const added: PendingImage[] = [];
     for (const file of files) {
-      const image = await prepareImage(file, folder, taken);
-      taken.push(image.url);
-      added.push(image);
+      try {
+        const image = await prepareImage(file, folder, taken);
+        taken.push(image.url);
+        added.push(image);
+      } catch (e) {
+        setNotice({ kind: "error", text: (e as Error).message });
+      }
     }
     setDraft((d) => ({ ...d, images: [...d.images, ...added] }));
     return added.map((image) => image.url);
@@ -708,7 +722,7 @@ export default function Writer() {
   const pickThumbnail = async (file: File) => {
     try {
       const [url] = await addImages([file]);
-      setThumbnail(url);
+      if (url) setThumbnail(url);
     } catch (e) {
       setNotice({
         kind: "error",
@@ -1158,11 +1172,17 @@ export default function Writer() {
 
       {draft.images.length > 0 && (
         <section className={styles.images}>
-          <span className={styles.muted}>게시할 때 함께 올라갈 이미지</span>
+          <span className={styles.muted}>
+            게시할 때 함께 올라갈 이미지·영상
+          </span>
           <div className={styles.imageGrid}>
             {draft.images.map((image) => (
               <figure key={image.url}>
-                <img src={`data:${image.type};base64,${image.base64}`} alt="" />
+                {isVideo(image.type) ? (
+                  <PendingVideo image={image} />
+                ) : (
+                  <img src={dataUrl(image)} alt="" />
+                )}
                 <figcaption>
                   <code>{image.url}</code>
                   <button

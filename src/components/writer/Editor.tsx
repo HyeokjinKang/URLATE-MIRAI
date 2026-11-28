@@ -5,6 +5,7 @@ import React, {
   type DragEvent,
   type KeyboardEvent,
 } from "react";
+import { isMedia, isVideoUrl, VIDEO_TYPES, videoTag } from "./image";
 import {
   backspace,
   enter,
@@ -249,13 +250,15 @@ export default function Editor({
   };
 
   const insertImages = async (files: File[]) => {
-    const images = files.filter((file) => file.type.startsWith("image/"));
+    const images = files.filter((file) => isMedia(file.type));
     if (images.length === 0) return false;
     const el = ref.current!;
     const start = el.selectionStart;
     const end = el.selectionEnd;
     const urls = await onImages(images);
-    const text = urls.map((url) => `![](${url})`).join("\n\n");
+    const text = urls
+      .map((url) => (isVideoUrl(url) ? videoTag(url) : `![](${url})`))
+      .join("\n\n");
     if (text) apply((v) => block(text)(v, start, end));
     return true;
   };
@@ -293,7 +296,7 @@ export default function Editor({
 
   const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
     const files = Array.from(e.clipboardData.files);
-    if (files.some((file) => file.type.startsWith("image/"))) {
+    if (files.some((file) => isMedia(file.type))) {
       e.preventDefault();
       void insertImages(files);
     }
@@ -340,15 +343,15 @@ export default function Editor({
         </select>
         <button
           type="button"
-          title="이미지 올리기 (붙여넣기·끌어다 놓기도 됩니다)"
+          title="이미지·영상(mp4, webm) 올리기 (붙여넣기·끌어다 놓기도 됩니다)"
           onClick={() => fileRef.current?.click()}
         >
-          🖼 이미지
+          🖼 이미지·영상
         </button>
         <input
           ref={fileRef}
           type="file"
-          accept="image/*"
+          accept={["image/*", ...VIDEO_TYPES].join(",")}
           multiple
           hidden
           onChange={(e) => {
