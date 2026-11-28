@@ -7,6 +7,7 @@ module.exports = async function createConfig() {
   const remarkMath = (await import("remark-math")).default;
   const rehypeKatex = (await import("rehype-katex")).default;
   const markdownPlugins = {
+    beforeDefaultRemarkPlugins: [require("./plugins/remark-image-caption")],
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
   };
